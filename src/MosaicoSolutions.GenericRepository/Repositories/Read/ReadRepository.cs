@@ -45,6 +45,9 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read
         public Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken))
             => dbSet.AnyAsync(predicate, cancellationToken);
 
+        public Task<bool> AllAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken))
+            => dbSet.AllAsync(predicate, cancellationToken);
+
         public Task<int> CountAsync(CancellationToken cancellationToken = default(CancellationToken))
             => dbSet.CountAsync(cancellationToken);
 

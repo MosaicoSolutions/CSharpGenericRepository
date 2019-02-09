@@ -37,5 +37,11 @@ namespace MosaicoSolutions.GenericRepository.Test.ReadRepository
             (await bookReadRepository.AnyAsync(b => b.Author.LastName == "Assis")).Should().BeTrue();
             (await authorReadRepository.AnyAsync(a => a.Books.Count() >= 3)).Should().BeTrue();
         }
+
+        [Fact]
+        public async Task AllAsync()
+        {
+            (await authorReadRepository.AllAsync(a => a.Books.Any())).Should().BeTrue();
+        }
     }
 }
