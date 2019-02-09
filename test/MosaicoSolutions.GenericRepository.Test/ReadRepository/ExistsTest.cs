@@ -19,6 +19,14 @@ namespace MosaicoSolutions.GenericRepository.Test.ReadRepository
         }
 
         [Fact]
+        public void ExistsAsync()
+        {
+            var books = bookStoreContext.Books.ToList();
+            
+            books.ForEach(async b => (await authorReadRepository.ExistsAsync(b.AuthorId)).Should().BeTrue());
+        }
+
+        [Fact]
         public async Task AnyAsync()
         {
             (await authorReadRepository.AnyAsync()).Should().BeTrue();

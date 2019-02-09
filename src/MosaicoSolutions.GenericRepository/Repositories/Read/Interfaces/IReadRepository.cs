@@ -11,6 +11,10 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Interfaces
     {
         bool Exists(params object[] ids);
 
+        Task<bool> ExistsAsync(object[] ids, CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<bool> ExistsAsync(params object[] ids);
+
         Task<bool> AnyAsync(CancellationToken cancellationToken = default(CancellationToken));
 
         Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken));

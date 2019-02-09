@@ -25,6 +25,20 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read
             return entity != null;
         }
 
+        public Task<bool> ExistsAsync(object[] ids, CancellationToken cancellationToken = default(CancellationToken))
+            => dbSet.FindAsync(ids, cancellationToken).ContinueWith(task => 
+            {
+                task.Wait();
+                return task.Result != null;
+            });
+
+        public Task<bool> ExistsAsync(params object[] ids)
+            => dbSet.FindAsync(ids).ContinueWith(task => 
+            {
+                task.Wait();
+                return task.Result != null;
+            });
+
         public Task<bool> AnyAsync(CancellationToken cancellationToken = default(CancellationToken))
             => dbSet.AnyAsync(cancellationToken);
 
