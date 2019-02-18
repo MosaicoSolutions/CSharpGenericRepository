@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
+using MosaicoSolutions.GenericRepository.Repositories.Read.Extensions;
 
 namespace MosaicoSolutions.GenericRepository.Test.ReadRepository
 {
