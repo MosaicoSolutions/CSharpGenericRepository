@@ -7,6 +7,6 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.Entities
         public int AuthorId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public ICollection<Book> Books { get; set; } = new List<Book>();
+        public virtual ICollection<Book> Books { get; set; } = new List<Book>();
     }
 }

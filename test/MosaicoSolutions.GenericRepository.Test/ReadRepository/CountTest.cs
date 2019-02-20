@@ -14,22 +14,22 @@ namespace MosaicoSolutions.GenericRepository.Test.ReadRepository
         [Fact]
         public async Task CountAsync()
         {
-            var countAuthors = await bookStoreContext.Authors.CountAsync();
+            var countAuthors = await bookStoreContext.Author.CountAsync();
             (await authorReadRepository.CountAsync()).Should().Be(countAuthors);
 
-            var countBooks = await bookStoreContext.Books.CountAsync();
+            var countBooks = await bookStoreContext.Book.CountAsync();
             (await bookReadRepository.CountAsync()).Should().Be(countBooks);
 
-            var longCountAuthors = await bookStoreContext.Authors.LongCountAsync();
+            var longCountAuthors = await bookStoreContext.Author.LongCountAsync();
             (await authorReadRepository.LongCountAsync()).Should().Be(longCountAuthors);
 
-            var longCountBooks = await bookStoreContext.Books.LongCountAsync();
+            var longCountBooks = await bookStoreContext.Book.LongCountAsync();
             (await bookReadRepository.LongCountAsync()).Should().Be(longCountBooks);
 
-            var booksWithNameNaruto = await bookStoreContext.Books.CountAsync(b => b.Title == "Naruto");
+            var booksWithNameNaruto = await bookStoreContext.Book.CountAsync(b => b.Title == "Naruto");
             (await bookReadRepository.CountAsync(b => b.Title == "Naruto")).Should().Be(booksWithNameNaruto);
 
-            var booksContainingDragonInTitle = await bookStoreContext.Books.LongCountAsync(b => b.Title.ToLower().Contains("dragon"));
+            var booksContainingDragonInTitle = await bookStoreContext.Book.LongCountAsync(b => b.Title.ToLower().Contains("dragon"));
             (await bookReadRepository.LongCountAsync(b => b.Title.ToLower().Contains("dragon"))).Should().Be(booksContainingDragonInTitle);
         }
     }

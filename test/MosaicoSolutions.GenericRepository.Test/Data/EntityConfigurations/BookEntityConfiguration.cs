@@ -9,6 +9,7 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.EntityConfigurations
         public void Configure(EntityTypeBuilder<Book> builder)
         {
             builder.HasKey(b => b.BookId);
+            builder.HasOne(b => b.Author).WithMany(a => a.Books).HasForeignKey(b => b.AuthorId);
         }
     }
 }

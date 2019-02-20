@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using MosaicoSolutions.GenericRepository.Repositories.Read.Queries;
 
 namespace MosaicoSolutions.GenericRepository.Repositories.Read.Interfaces
 {
@@ -37,5 +39,28 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Interfaces
                 task.Wait();
                 return task.Result != null;
             });
+
+        public TEntity Find(params object[] ids)
+            => DbSet.Find(ids);    
+        
+        public Task<TEntity> FindAsync(params object[] ids)
+            => DbSet.FindAsync(ids); 
+
+        public Task<TEntity> FindAsync(object[] ids, CancellationToken cancellationToken = default(CancellationToken))
+            => DbSet.FindAsync(ids, cancellationToken);
+
+        public List<TEntity> Find(QueryOptions<TEntity> queryOptions)
+        {
+            var query = Query(queryOptions);
+            return query.ToList();
+        }
+
+        public Task<List<TEntity>> FindAsync(QueryOptions<TEntity> queryOptions)
+        {
+            var query = Query(queryOptions);
+            return query.ToListAsync();
+        }
+
+        public IQuery<TEntity> Query(QueryOptions<TEntity> queryOptions) => new Query<TEntity>(DbSet, queryOptions);
     }
 }

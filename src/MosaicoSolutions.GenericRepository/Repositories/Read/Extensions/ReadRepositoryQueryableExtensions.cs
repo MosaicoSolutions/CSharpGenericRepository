@@ -47,5 +47,27 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Extensions
                                                                      CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
                                                                                                                                        where TEntity: class
             => @this.DbSet.LongCountAsync(predicate, cancellationToken);
+
+        public static Task<TEntity> MinAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                  CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                    where TEntity: class
+            => @this.DbSet.MinAsync(cancellationToken);
+
+        public static Task<TResult> MinAsync<TDbContext, TEntity, TResult>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                           Expression<Func<TEntity, TResult>> selector,
+                                                                           CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                             where TEntity: class
+            => @this.DbSet.MinAsync(selector, cancellationToken);
+
+        public static Task<TEntity> MaxAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                  CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                    where TEntity: class
+            => @this.DbSet.MaxAsync(cancellationToken);
+
+        public static Task<TResult> MaxAsync<TDbContext, TEntity, TResult>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                           Expression<Func<TEntity, TResult>> selector,
+                                                                           CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                             where TEntity: class
+            => @this.DbSet.MaxAsync(selector, cancellationToken);
     }
 }

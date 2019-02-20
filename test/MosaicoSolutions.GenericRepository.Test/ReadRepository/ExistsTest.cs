@@ -14,7 +14,7 @@ namespace MosaicoSolutions.GenericRepository.Test.ReadRepository
         [Fact]
         public void Exists()
         {
-            var authors = bookStoreContext.Authors.ToList();
+            var authors = bookStoreContext.Author.ToList();
             
             authors.ForEach(a => authorReadRepository.Exists(a.AuthorId).Should().BeTrue());
         }
@@ -22,7 +22,7 @@ namespace MosaicoSolutions.GenericRepository.Test.ReadRepository
         [Fact]
         public void ExistsAsync()
         {
-            var books = bookStoreContext.Books.ToList();
+            var books = bookStoreContext.Book.ToList();
             
             books.ForEach(async b => (await authorReadRepository.ExistsAsync(b.AuthorId)).Should().BeTrue());
         }

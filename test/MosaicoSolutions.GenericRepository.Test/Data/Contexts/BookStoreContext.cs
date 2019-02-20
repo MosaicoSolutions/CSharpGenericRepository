@@ -9,19 +9,21 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.Contexts
 {
     public class BookStoreContext : DbContext
     {
-        public DbSet<Book> Books { get; set; }
-        public DbSet<Author> Authors { get; set; }
+        public virtual DbSet<Book> Book { get; set; }
+        public virtual DbSet<Author> Author { get; set; }
 
         public BookStoreContext()
         {}
 
         public BookStoreContext(DbContextOptions<BookStoreContext> options) : base(options) 
-            => InitializeDataBase();
+         => InitializeDataBase();
 
         public static BookStoreContext NewDatabaseInMemory(string databaseName)
         {
             var options = new DbContextOptionsBuilder<BookStoreContext>()
                 .UseInMemoryDatabase(databaseName: databaseName)
+                //.UseSqlServer(@"Server=.\SQLEXPRESS;Database=BookStore;Trusted_Connection=True;")
+                //.UseLazyLoadingProxies(useLazyLoadingProxies: false)
                 .Options;
 
             return new BookStoreContext(options);
@@ -76,7 +78,7 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.Contexts
                 }
             };
 
-            Authors.AddRange(authors);
+            Author.AddRange(authors);
             SaveChanges();
         }
 
@@ -92,7 +94,7 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.Contexts
                         .RuleFor(a => a.LastName, f => f.Name.LastName())
                         .RuleFor(a => a.Books, f => fakeBookGenerator.Generate(random.Next(2, 10)));
 
-            Authors.AddRange(fakeAuthors.Generate(count ?? random.Next(20, 50)));
+            Author.AddRange(fakeAuthors.Generate(count ?? random.Next(20, 50)));
             SaveChanges();
         }
     }
