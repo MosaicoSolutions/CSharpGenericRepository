@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +21,7 @@ namespace MosaicoSolutions.GenericRepository.Test.ReadRepository
         { 
             var firstBookId = bookStoreContext.Book.FirstOrDefault()?.BookId;
 
-            var firstBook = bookReadRepository.Find(firstBookId);
+            var firstBook = bookReadRepository.FindById(firstBookId);
 
             firstBook.Should().NotBeNull();
             firstBook.BookId.Should().Be(firstBookId);
@@ -30,7 +32,7 @@ namespace MosaicoSolutions.GenericRepository.Test.ReadRepository
         { 
             var firstBookId = (await bookStoreContext.Book.FirstOrDefaultAsync())?.BookId;
 
-            var firstBook = await bookReadRepository.FindAsync(firstBookId);
+            var firstBook = await bookReadRepository.FindByIdAsync(firstBookId);
 
             firstBook.Should().NotBeNull();
             firstBook.BookId.Should().Be(firstBookId);
@@ -102,6 +104,55 @@ namespace MosaicoSolutions.GenericRepository.Test.ReadRepository
             var orderedAuthors = await authorReadRepository.FindAsync(queryOptions);
 
             orderedAuthors.SequenceEqual(authors, new AuthorEqualityComparer()).Should().BeTrue();
+        }
+
+        [Fact]
+        public void UsingInclude()
+        {
+            var firstAuthor = bookStoreContext.Author.Include(a => a.Books).FirstOrDefault();
+
+            var queryOptions = new QueryOptions<Author>
+            {
+                Includes = new Expression<Func<Author, object>>[]
+                {
+                    a => a.Books
+                }
+            };
+
+            var firstAuthorUsingRepository = authorReadRepository.Query(queryOptions).FirstOrDefault();
+            firstAuthorUsingRepository.Books.Count.Should().Be(firstAuthor.Books.Count);
+        }
+
+        [Fact]
+        public async Task UsingIncludeAsync()
+        {
+            var firstAuthor = await bookStoreContext.Author.Include(a => a.Books).FirstOrDefaultAsync();
+
+            var queryOptions = new QueryOptions<Author>
+            {
+                Includes = new Expression<Func<Author, object>>[]
+                {
+                    a => a.Books
+                }
+            };
+
+            var firstAuthorUsingRepository = await authorReadRepository.Query(queryOptions).FirstOrDefaultAsync();
+            firstAuthorUsingRepository.Books.Count.Should().Be(firstAuthor.Books.Count);
+        }
+
+        [Fact]
+        public void UsingQueryBuilder()
+        {
+            var queryOptions = QueryBuilder.For<Author>()
+                                           .Where(a => a.Books.Count() == 3)
+                                           .Include(a => a.Books)
+                                           .OrderBy(a => a.FirstName)
+                                           .ThenBy(a => a.LastName)
+                                           .Descending()
+                                           .Build();
+
+            var authors = authorReadRepository.Find(queryOptions);
+            authors.Should().NotBeNullOrEmpty();
         }
 
         class AuthorEqualityComparer : IEqualityComparer<Author>

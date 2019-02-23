@@ -50,6 +50,22 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Queries
 
         public Task<TEntity> FirstOrDefaultAsync(CancellationToken cancellationToken = default(CancellationToken)) => queryable.FirstOrDefaultAsync(cancellationToken);
 
+        public TEntity Last() => queryable.Last();
+
+        public Task<TEntity> LastAsync(CancellationToken cancellationToken = default(CancellationToken)) => queryable.LastAsync(cancellationToken);
+
+        public TEntity LastOrDefault() => queryable.LastOrDefault();
+
+        public Task<TEntity> LastOrDefaultAsync(CancellationToken cancellationToken = default(CancellationToken)) => queryable.LastOrDefaultAsync(cancellationToken);
+
+        public TEntity Single() => queryable.Single();
+
+        public Task<TEntity> SingleAsync(CancellationToken cancellationToken = default(CancellationToken)) => queryable.SingleAsync(cancellationToken);
+
+        public TEntity SingleOrDefault() => queryable.SingleOrDefault();
+
+        public Task<TEntity> SingleOrDefaultAsync(CancellationToken cancellationToken = default(CancellationToken)) => queryable.SingleOrDefaultAsync(cancellationToken);
+
         public List<TEntity> ToList() => queryable.ToList();
 
         public Task<List<TEntity>> ToListAsync(CancellationToken cancellationToken = default(CancellationToken)) => queryable.ToListAsync(cancellationToken);

@@ -16,17 +16,30 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.Contexts
         {}
 
         public BookStoreContext(DbContextOptions<BookStoreContext> options) : base(options) 
-         => InitializeDataBase();
+        {}
 
         public static BookStoreContext NewDatabaseInMemory(string databaseName)
         {
             var options = new DbContextOptionsBuilder<BookStoreContext>()
                 .UseInMemoryDatabase(databaseName: databaseName)
-                //.UseSqlServer(@"Server=.\SQLEXPRESS;Database=BookStore;Trusted_Connection=True;")
-                //.UseLazyLoadingProxies(useLazyLoadingProxies: false)
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+                .UseLazyLoadingProxies(useLazyLoadingProxies: false)
+                .Options;
+            
+            var bookStoreContext = new BookStoreContext(options);
+            bookStoreContext.InitializeDataBase();
+            return bookStoreContext;
+        }
+
+        public static BookStoreContext SqlServer()
+        {
+            var options = new DbContextOptionsBuilder<BookStoreContext>()
+                .UseSqlServer(@"Server=.\SQLEXPRESS;Database=BookStore;Trusted_Connection=True;")
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                 .Options;
 
-            return new BookStoreContext(options);
+            var bookStoreContext = new BookStoreContext(options);
+            return bookStoreContext;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) 

@@ -40,13 +40,13 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Interfaces
                 return task.Result != null;
             });
 
-        public TEntity Find(params object[] ids)
+        public TEntity FindById(params object[] ids)
             => DbSet.Find(ids);    
         
-        public Task<TEntity> FindAsync(params object[] ids)
+        public Task<TEntity> FindByIdAsync(params object[] ids)
             => DbSet.FindAsync(ids); 
 
-        public Task<TEntity> FindAsync(object[] ids, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<TEntity> FindByIdAsync(object[] ids, CancellationToken cancellationToken = default(CancellationToken))
             => DbSet.FindAsync(ids, cancellationToken);
 
         public List<TEntity> Find(QueryOptions<TEntity> queryOptions)
