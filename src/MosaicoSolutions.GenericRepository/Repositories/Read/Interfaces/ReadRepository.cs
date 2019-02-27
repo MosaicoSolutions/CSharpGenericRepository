@@ -11,8 +11,8 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Interfaces
     public abstract class ReadRepository<TDbContext, TEntity> where TDbContext: DbContext
                                                               where TEntity: class
     {
-        public TDbContext DbContext { get; set; }
-        public DbSet<TEntity> DbSet { get; set; }
+        public TDbContext DbContext { get; }
+        public DbSet<TEntity> DbSet { get; }
 
         public ReadRepository(TDbContext dbContext)
         {
