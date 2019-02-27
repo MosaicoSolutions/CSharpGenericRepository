@@ -69,5 +69,131 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Extensions
                                                                            CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
                                                                                                                                              where TEntity: class
             => @this.DbSet.MaxAsync(selector, cancellationToken);
+
+        public static Task<decimal> SumAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                  Expression<Func<TEntity, decimal>> selector,
+                                                                  CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                    where TEntity: class
+            => @this.DbSet.SumAsync(selector, cancellationToken);
+
+        public static Task<decimal?> SumAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                  Expression<Func<TEntity, decimal?>> selector,
+                                                                  CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                    where TEntity: class
+            => @this.DbSet.SumAsync(selector, cancellationToken);
+        
+        public static Task<int> SumAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                              Expression<Func<TEntity, int>> selector,
+                                                              CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                where TEntity: class
+            => @this.DbSet.SumAsync(selector, cancellationToken);
+
+        public static Task<int?> SumAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                               Expression<Func<TEntity, int?>> selector,
+                                                               CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                 where TEntity: class
+            => @this.DbSet.SumAsync(selector, cancellationToken);
+
+        public static Task<long> SumAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                               Expression<Func<TEntity, long>> selector,
+                                                               CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                 where TEntity: class
+            => @this.DbSet.SumAsync(selector, cancellationToken);
+
+        public static Task<long?> SumAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                Expression<Func<TEntity, long?>> selector,
+                                                                CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                  where TEntity: class
+            => @this.DbSet.SumAsync(selector, cancellationToken);
+
+        public static Task<double> SumAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                 Expression<Func<TEntity, double>> selector,
+                                                                 CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                   where TEntity: class
+            => @this.DbSet.SumAsync(selector, cancellationToken);
+
+        public static Task<double?> SumAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                  Expression<Func<TEntity, double?>> selector,
+                                                                  CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                    where TEntity: class
+            => @this.DbSet.SumAsync(selector, cancellationToken);
+
+        public static Task<float> SumAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                Expression<Func<TEntity, float>> selector,
+                                                                CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                  where TEntity: class
+            => @this.DbSet.SumAsync(selector, cancellationToken);
+
+        public static Task<float?> SumAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                 Expression<Func<TEntity, float?>> selector,
+                                                                 CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                   where TEntity: class
+            => @this.DbSet.SumAsync(selector, cancellationToken);
+
+        public static Task<decimal> AverageAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                      Expression<Func<TEntity, decimal>> selector,
+                                                                      CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                        where TEntity: class
+            => @this.DbSet.AverageAsync(selector, cancellationToken);
+
+        public static Task<decimal?> AverageAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                       Expression<Func<TEntity, decimal?>> selector,
+                                                                       CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                         where TEntity: class
+            => @this.DbSet.AverageAsync(selector, cancellationToken);
+
+        public static Task<double> AverageAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                     Expression<Func<TEntity, int>> selector,
+                                                                     CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                       where TEntity: class
+            => @this.DbSet.AverageAsync(selector, cancellationToken);
+
+        public static Task<double?> AverageAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                      Expression<Func<TEntity, int?>> selector,
+                                                                      CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                        where TEntity: class
+            => @this.DbSet.AverageAsync(selector, cancellationToken);
+
+        public static Task<double> AverageAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                     Expression<Func<TEntity, long>> selector,
+                                                                     CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                       where TEntity: class
+            => @this.DbSet.AverageAsync(selector, cancellationToken);
+
+        public static Task<double?> AverageAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                      Expression<Func<TEntity, long?>> selector,
+                                                                      CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                        where TEntity: class
+            => @this.DbSet.AverageAsync(selector, cancellationToken);
+
+        public static Task<double> AverageAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                    Expression<Func<TEntity, double>> selector,
+                                                                    CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                      where TEntity: class
+            => @this.DbSet.AverageAsync(selector, cancellationToken);
+
+        public static Task<double?> AverageAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                      Expression<Func<TEntity, double?>> selector,
+                                                                      CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                        where TEntity: class
+            => @this.DbSet.AverageAsync(selector, cancellationToken);
+
+        public static Task<float> AverageAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                    Expression<Func<TEntity, float>> selector,
+                                                                    CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                      where TEntity: class
+            => @this.DbSet.AverageAsync(selector, cancellationToken);
+
+        public static Task<float?> AverageAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                     Expression<Func<TEntity, float?>> selector,
+                                                                     CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                       where TEntity: class
+            => @this.DbSet.AverageAsync(selector, cancellationToken);
+
+        public static Task<bool> ContainsAsync<TDbContext, TEntity>(this ReadRepository<TDbContext, TEntity> @this,
+                                                                    TEntity entity,
+                                                                    CancellationToken cancellationToken = default(CancellationToken)) where TDbContext: DbContext
+                                                                                                                                      where TEntity: class
+            => @this.DbSet.ContainsAsync(entity, cancellationToken);
     }
 }
