@@ -20,34 +20,26 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Interfaces
             DbSet = dbContext.Set<TEntity>();
         }
 
-        public bool Exists(params object[] ids)
+        public bool Exists(params object[] keyValues)
         {
-            var entity = DbSet.Find(ids);
+            var entity = DbSet.Find(keyValues);
             return entity != null;
         }
 
-        public Task<bool> ExistsAsync(object[] ids, CancellationToken cancellationToken = default(CancellationToken))
-            => DbSet.FindAsync(ids, cancellationToken).ContinueWith(task => 
-            {
-                task.Wait();
-                return task.Result != null;
-            });
+        public Task<bool> ExistsAsync(object[] keyValues, CancellationToken cancellationToken = default(CancellationToken))
+            => DbSet.FindAsync(keyValues, cancellationToken).ContinueWith(task => task.Result != null);
 
-        public Task<bool> ExistsAsync(params object[] ids)
-            => DbSet.FindAsync(ids).ContinueWith(task => 
-            {
-                task.Wait();
-                return task.Result != null;
-            });
+        public Task<bool> ExistsAsync(params object[] keyValues)
+            => DbSet.FindAsync(keyValues).ContinueWith(task => task.Result != null);
 
-        public TEntity FindById(params object[] ids)
-            => DbSet.Find(ids);    
+        public TEntity FindById(params object[] keyValues)
+            => DbSet.Find(keyValues);    
         
-        public Task<TEntity> FindByIdAsync(params object[] ids)
-            => DbSet.FindAsync(ids); 
+        public Task<TEntity> FindByIdAsync(params object[] keyValues)
+            => DbSet.FindAsync(keyValues); 
 
-        public Task<TEntity> FindByIdAsync(object[] ids, CancellationToken cancellationToken = default(CancellationToken))
-            => DbSet.FindAsync(ids, cancellationToken);
+        public Task<TEntity> FindByIdAsync(object[] keyValues, CancellationToken cancellationToken = default(CancellationToken))
+            => DbSet.FindAsync(keyValues, cancellationToken);
 
         public List<TEntity> Find(QueryOptions<TEntity> queryOptions)
         {
