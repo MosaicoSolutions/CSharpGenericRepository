@@ -22,7 +22,6 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.Contexts
         {
             var options = new DbContextOptionsBuilder<BookStoreContext>()
                 .UseInMemoryDatabase(databaseName: databaseName)
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                 .UseLazyLoadingProxies(useLazyLoadingProxies: false)
                 .Options;
             
