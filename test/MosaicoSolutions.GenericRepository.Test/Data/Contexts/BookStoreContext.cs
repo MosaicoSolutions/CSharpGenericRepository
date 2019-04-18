@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Bogus;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,7 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.Contexts
                 .Options;
 
             var bookStoreContext = new BookStoreContext(options);
+            bookStoreContext.InitializeDataBase();
             return bookStoreContext;
         }
 
@@ -46,6 +48,8 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.Contexts
 
         private void InitializeDataBase()
         {
+            CleanDatabase();
+
             var authors = new List<Author>()
             {
                 new Author
@@ -91,6 +95,13 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.Contexts
             };
 
             Author.AddRange(authors);
+            SaveChanges();
+        }
+
+        private void CleanDatabase()
+        {
+            Book.RemoveRange(Book.ToList());
+            Author.RemoveRange(Author.ToList());
             SaveChanges();
         }
 
