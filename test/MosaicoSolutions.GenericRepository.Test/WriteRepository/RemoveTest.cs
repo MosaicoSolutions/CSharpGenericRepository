@@ -1,5 +1,6 @@
 using System.Linq;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace MosaicoSolutions.GenericRepository.Test.WriteRepository
@@ -12,27 +13,27 @@ namespace MosaicoSolutions.GenericRepository.Test.WriteRepository
         [Fact]
         public void RemoveById()
         {
-            var firstAuthor = bookStoreContext.Author.FirstOrDefault();
+            var firstAuthor = bookStoreContext.Author.AsNoTracking().FirstOrDefault();
+            var booksFirstAuthor = bookStoreContext.Book.AsNoTracking().Where(b => b.AuthorId == firstAuthor.AuthorId).ToList();
             
-            bookWriteRepository.RemoveById(firstAuthor.AuthorId);
+            booksFirstAuthor.ForEach(b => bookWriteRepository.RemoveById(b.BookId));
             
             var rowsAffected = unitOfWork.Commit();
             rowsAffected.Should().BeGreaterThan(0);
 
-            var authorAgain = bookStoreContext.Author.FirstOrDefault(a => a.AuthorId == firstAuthor.AuthorId);
-
-            bookStoreContext.Author.Any(a => a.AuthorId == firstAuthor.AuthorId).Should().BeFalse();
+            bookStoreContext.Author.Any(a => a.AuthorId == firstAuthor.AuthorId).Should().BeTrue();
+            bookStoreContext.Book.Any(b => b.AuthorId == firstAuthor.AuthorId).Should().BeFalse();
         }
 
         [Fact]
         public void RemoveWhere()
         {
-            authorWriteRepository.RemoveWhere(a => a.Books.Any(b => b.Title == "Naruto"));
+            bookWriteRepository.RemoveWhere(b => b.Title == "Naruto");
 
             var rowsAffected = unitOfWork.Commit();
             rowsAffected.Should().BeGreaterThan(0);
 
-            bookStoreContext.Author.Any(a => a.Books.Any(b => b.Title == "Naruto")).Should().BeFalse();
+            bookStoreContext.Book.Any(b => b.Title == "Naruto").Should().BeFalse();
         }
     }
 }

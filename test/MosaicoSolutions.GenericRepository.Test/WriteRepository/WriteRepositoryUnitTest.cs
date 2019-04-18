@@ -1,3 +1,4 @@
+using System;
 using MosaicoSolutions.GenericRepository.Repositories.Write;
 using MosaicoSolutions.GenericRepository.Repositories.Write.Interfaces;
 using MosaicoSolutions.GenericRepository.Repositories.Write.UoW;
@@ -6,7 +7,7 @@ using MosaicoSolutions.GenericRepository.Test.Data.Entities;
 
 namespace MosaicoSolutions.GenericRepository.Test.WriteRepository
 {
-    public class WriteRepositoryUnitTest
+    public class WriteRepositoryUnitTest : IDisposable
     {
         protected BookStoreContext bookStoreContext;
         protected WriteRepository<BookStoreContext, Book> bookWriteRepository;
