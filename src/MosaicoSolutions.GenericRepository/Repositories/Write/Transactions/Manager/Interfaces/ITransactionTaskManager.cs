@@ -2,8 +2,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions.Manager.Interfaces
 {
-    public interface ITransactionTaskManager<TDbContext> where TDbContext : DbContext
+    public interface ITransactionTaskManager
     {
-        TransactionTaskResult<TDbContext> UseTransaction(TransactionTask<TDbContext> transactionTask);
+        TransactionTaskResult UseTransaction(TransactionTask transactionTask);
     }
 }

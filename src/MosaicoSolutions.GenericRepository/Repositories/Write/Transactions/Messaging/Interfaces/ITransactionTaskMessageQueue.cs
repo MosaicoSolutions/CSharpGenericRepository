@@ -2,8 +2,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions.Messaging.Interfaces
 {
-    public interface ITransactionTaskMessageQueue<TDbContext> where TDbContext : DbContext
+    public interface ITransactionTaskMessageQueue
     {
-        void Enqueue(TransactionTask<TDbContext> transactionTask);
+        void Enqueue(TransactionTask transactionTask);
     }
 }

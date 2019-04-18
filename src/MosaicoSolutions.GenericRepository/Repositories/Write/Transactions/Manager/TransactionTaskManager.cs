@@ -7,21 +7,21 @@ using MosaicoSolutions.GenericRepository.Repositories.Write.Transactions.Manager
 
 namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions.Manager
 {
-    public class TransactionTaskManager<TDbContext> : ITransactionTaskManager<TDbContext> where TDbContext : DbContext
+    public class TransactionTaskManager : ITransactionTaskManager
     {
-        private readonly Func<TDbContext> _newDbContext;
+        private readonly Func<DbContext> _newDbContext;
 
-        public TransactionTaskManager(Func<TDbContext> newDbContext)
+        public TransactionTaskManager(Func<DbContext> newDbContext)
         {
             _newDbContext = newDbContext ?? throw new ArgumentOutOfRangeException(nameof(newDbContext));
         }
 
-        public TransactionTaskResult<TDbContext> UseTransaction(TransactionTask<TDbContext> transactionTask)
+        public TransactionTaskResult UseTransaction(TransactionTask transactionTask)
             => transactionTask is null
                 ? throw new ArgumentNullException(nameof(transactionTask))
                 : TryUseTransaction(transactionTask);
 
-        private TransactionTaskResult<TDbContext> TryUseTransaction(TransactionTask<TDbContext> transactionTask)
+        private TransactionTaskResult TryUseTransaction(TransactionTask transactionTask)
         {
             using (var dbContext = _newDbContext())
                 using (var transaction = dbContext.Database.BeginTransaction())
@@ -32,12 +32,12 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions.Man
 
                         transaction.Commit();
 
-                        var transactionTaskSuccess = new TransactionTaskResult<TDbContext>(transaction.TransactionId, transactionTask);
+                        var transactionTaskSuccess = new TransactionTaskResult(transaction.TransactionId, transactionTask);
                         return transactionTaskSuccess;
                     }
                     catch(Exception e)
                     {
-                        var transactionTaskFailure = new TransactionTaskResult<TDbContext>(transaction.TransactionId, transactionTask, e);
+                        var transactionTaskFailure = new TransactionTaskResult(transaction.TransactionId, transactionTask, e);
                         return transactionTaskFailure;
                     }
         }

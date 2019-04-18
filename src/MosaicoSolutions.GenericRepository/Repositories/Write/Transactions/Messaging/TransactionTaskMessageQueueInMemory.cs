@@ -5,18 +5,18 @@ using MosaicoSolutions.GenericRepository.Repositories.Write.Transactions.Messagi
 
 namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions.Messaging
 {
-    public sealed class TransactionTaskMessageQueueInMemory<TDbContext> : ITransactionTaskMessageQueue<TDbContext> where TDbContext : DbContext
+    public sealed class TransactionTaskMessageQueueInMemory : ITransactionTaskMessageQueue
     {
-        private readonly Func<TDbContext> _newDbContext;
-        private readonly ConcurrentQueue<TransactionTask<TDbContext>> _concurrentQueue;
+        private readonly Func<DbContext> _newDbContext;
+        private readonly ConcurrentQueue<TransactionTask> _concurrentQueue;
         
-        public TransactionTaskMessageQueueInMemory(Func<TDbContext> newDbContext)
+        public TransactionTaskMessageQueueInMemory(Func<DbContext> newDbContext)
         {
             _newDbContext = newDbContext ?? throw new ArgumentOutOfRangeException(nameof(newDbContext));
-            _concurrentQueue = new ConcurrentQueue<TransactionTask<TDbContext>>();
+            _concurrentQueue = new ConcurrentQueue<TransactionTask>();
         }
 
-        public void Enqueue(TransactionTask<TDbContext> transactionTask) => _concurrentQueue.Enqueue(transactionTask);
+        public void Enqueue(TransactionTask transactionTask) => _concurrentQueue.Enqueue(transactionTask);
 
         public event TransactionTaskMessageQueueEventHandle OnSuccess;
         public event TransactionTaskMessageQueueEventHandle OnFailure;

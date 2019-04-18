@@ -7,7 +7,7 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions.Mes
     {
         private readonly object _transactionTask;
 
-        public TransactionTask<TDbContext> TransactionTask<TDbContext>() where TDbContext : DbContext
-            => _transactionTask as TransactionTask<TDbContext>;
+        public TransactionTask TransactionTask<TDbContext>() where TDbContext : DbContext
+            => _transactionTask as TransactionTask;
     }
 }
