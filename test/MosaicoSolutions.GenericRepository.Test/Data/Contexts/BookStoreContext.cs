@@ -31,10 +31,13 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.Contexts
             return bookStoreContext;
         }
 
-        public static BookStoreContext SqlServer()
+        public static BookStoreContext SqlServerExpress()
+            => SqlServer(@"Server=.\SQLEXPRESS;Database=BookStore;Trusted_Connection=True;");
+
+        public static BookStoreContext SqlServer(string connectionString)
         {
             var options = new DbContextOptionsBuilder<BookStoreContext>()
-                .UseSqlServer(@"Server=.\SQLEXPRESS;Database=BookStore;Trusted_Connection=True;")
+                .UseSqlServer(connectionString)
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                 .Options;
 
