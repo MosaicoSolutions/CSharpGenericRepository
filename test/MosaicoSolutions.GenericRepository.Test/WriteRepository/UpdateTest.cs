@@ -14,6 +14,7 @@ namespace MosaicoSolutions.GenericRepository.Test.WriteRepository
         public void Update()
         {
             var bookNaruto = bookStoreContext.Book.FirstOrDefault(b => b.Title.Contains("Naruto"));
+            var oldTitle = bookNaruto.Title;
             var newTitle = "Naruto Classic";
 
             bookNaruto.Title = newTitle;
@@ -23,6 +24,7 @@ namespace MosaicoSolutions.GenericRepository.Test.WriteRepository
             var rowsAffected = unitOfWork.Commit();
             rowsAffected.Should().BeGreaterThan(0);
 
+            bookStoreContext.Book.Any(b => b.Title == oldTitle).Should().BeFalse();
             bookStoreContext.Book.Any(b => b.Title == newTitle).Should().BeTrue();
         }
 
