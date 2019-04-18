@@ -32,12 +32,6 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Write.Interfaces
 
         public virtual Task InsertRangeAsync(params TEntity[] entities) => DbSet.AddRangeAsync(entities);
 
-        public virtual EntityEntry<TEntity> Attach(TEntity entity) => DbSet.Attach(entity);
-
-        public virtual void AttachRange(IEnumerable<TEntity> entities) => DbSet.AttachRange(entities);
-
-        public virtual void AttachRange(params TEntity[] entities) => DbSet.AttachRange(entities);
-
         public virtual void Update(TEntity entity) => DbSet.Update(entity);
 
         public virtual void UpdateRange(IEnumerable<TEntity> entities) => DbSet.UpdateRange(entities);
