@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using MosaicoSolutions.GenericRepository.Exceptions;
 
 namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions
 {
@@ -37,7 +38,7 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions
                 var entity = dbContext.Set<TEntity>().Find(keyValues);
 
                 if (entity is null)
-                    throw new Exception($"Entity not found for ids supplied! ids: [{string.Join(",", keyValues)}]");
+                    throw new EntityNotFoundForSuppliedKeyValuesException(keyValues);
 
                 dbContext.Set<TEntity>().Remove(entity);
                 dbContext.SaveChanges();

@@ -1,6 +1,8 @@
+using System;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using MosaicoSolutions.GenericRepository.Exceptions;
 using Xunit;
 
 namespace MosaicoSolutions.GenericRepository.Test.WriteRepository
@@ -34,6 +36,14 @@ namespace MosaicoSolutions.GenericRepository.Test.WriteRepository
             rowsAffected.Should().BeGreaterThan(0);
 
             bookStoreContext.Book.Any(b => b.Title == "Naruto").Should().BeFalse();
+        }
+
+        [Fact]
+        public void RemoveWithInvalidKeyValue()
+        {
+            Action action = () => bookWriteRepository.RemoveById(-1);
+
+            action.Should().Throw<EntityNotFoundForSuppliedKeyValuesException>();
         }
     }
 }

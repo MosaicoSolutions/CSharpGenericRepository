@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using MosaicoSolutions.GenericRepository.Exceptions;
 
 namespace MosaicoSolutions.GenericRepository.Repositories.Write.Interfaces
 {
@@ -49,7 +50,7 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Write.Interfaces
             var entity = DbSet.Find(keyValues);
 
             if (entity is null)
-                throw new Exception($"Entity not found for ids supplied! ids: [{string.Join(",", keyValues)}]");
+                throw new EntityNotFoundForSuppliedKeyValuesException(keyValues);
 
             this.Remove(entity);
         }
