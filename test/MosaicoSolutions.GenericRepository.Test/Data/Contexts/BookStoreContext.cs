@@ -42,7 +42,6 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.Contexts
                 .Options;
 
             var bookStoreContext = new BookStoreContext(options);
-            bookStoreContext.InitializeDataBase();
             return bookStoreContext;
         }
 

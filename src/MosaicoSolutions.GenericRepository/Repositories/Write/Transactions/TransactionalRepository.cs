@@ -1,55 +1,73 @@
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions
 {
-    public abstract class TransactionalRepository<TDbContext> where TDbContext : DbContext
-    { }
-
-    public abstract class TransactionalRepository<TDbContext, TEntity> : TransactionalRepository<TDbContext> where TDbContext : DbContext
-                                                                                                             where TEntity : class
+    public class TransactionalRepository<TEntity> : ITransactionalRepository<TEntity> where TEntity : class
     {
-        // public virtual TransactionTask<TDbContext> InsertAsTransactionTask(TEntity entity)
-        //     => dbContext => 
-        //     {
-        //         dbContext.Entry(entity).State = EntityState.Added;
-        //         dbContext.SaveChanges();
-        //     };
+        public TransactionTask InsertAsTransactionTask(TEntity entity)
+            => new TransactionTask(dbContext =>
+            {
+                dbContext.Set<TEntity>().Add(entity);
+                dbContext.SaveChanges();
+            }, "InsertAsTransactionTask");
 
-        // public virtual TransactionTask<TDbContext> InsertRangeAsTransactionTask(IEnumerable<TEntity> entities)
-        //     => dbContext => 
-        //     {
-        //         dbContext.Set<TEntity>().AddRange(entities);
-        //         dbContext.SaveChanges();
-        //     };
+        public TransactionTask InsertRangeAsTransactionTask(IEnumerable<TEntity> entities)
+            => InsertRangeAsTransactionTask(entities.ToArray());
 
-        // public virtual TransactionTask<TDbContext> InsertRangeAsTransactionTask(params TEntity[] entities)
-        //     => dbContext => 
-        //     {
-        //         dbContext.Set<TEntity>().AddRange(entities);
-        //         dbContext.SaveChanges();
-        //     };
+        public TransactionTask InsertRangeAsTransactionTask(params TEntity[] entities)
+            => new TransactionTask(dbContext => 
+            {
+                dbContext.Set<TEntity>().AddRange(entities);
+                dbContext.SaveChanges();
+            }, "InsertRangeAsTransactionTask");
 
-        // public virtual TransactionTask<TDbContext> Update(TEntity entity)
-        //     => dbContext =>
-        //     {
-        //         dbContext.Set<TEntity>().Update(entity);
-        //         dbContext.SaveChanges();
-        //     };
+        public TransactionTask RemoveAsTransactionTask(TEntity entity)
+            => new TransactionTask(dbContext => 
+            {
+                dbContext.Set<TEntity>().Remove(entity);
+                dbContext.SaveChanges();
+            }, "RemoveAsTransactionTask");
 
-        // public virtual TransactionTask<TDbContext> UpdateRange(IEnumerable<TEntity> entities)
-        //     => dbContext =>
-        //     {
-        //         dbContext.Set<TEntity>().UpdateRange(entities);
-        //         dbContext.SaveChanges();
-        //     };
+        public TransactionTask RemoveByIdAsTransactionTask(params object[] keyValues)
+            => new TransactionTask(dbContext => 
+            {
+                var entity = dbContext.Set<TEntity>().Find(keyValues);
 
-        // public virtual TransactionTask<TDbContext> UpdateRange(params TEntity[] entities)
-        //     => dbContext =>
-        //     {
-        //         dbContext.Set<TEntity>().UpdateRange(entities);
-        //         dbContext.SaveChanges();
-        //     };
+                if (entity is null)
+                    throw new Exception($"Entity not found for ids supplied! ids: [{string.Join(",", keyValues)}]");
+
+                dbContext.Set<TEntity>().Remove(entity);
+                dbContext.SaveChanges();
+            }, "RemoveByIdAsTransactionTask");
+
+        public TransactionTask RemoveRangeAsTransactionTask(IEnumerable<TEntity> entities)
+            => RemoveRangeAsTransactionTask(entities.ToArray());
+
+        public TransactionTask RemoveRangeAsTransactionTask(params TEntity[] entities)
+            => new TransactionTask(dbContext => 
+            {
+                dbContext.Set<TEntity>().RemoveRange(entities);
+                dbContext.SaveChanges();
+            }, "RemoveRangeAsTransactionTask");
+
+        public TransactionTask UpdateAsTransactionTask(TEntity entity)
+            => new TransactionTask(dbContext => 
+            {
+                dbContext.Set<TEntity>().Update(entity);
+                dbContext.SaveChanges();
+            }, "UpdateAsTransactionTask");
+
+        public TransactionTask UpdateRangeAsTransactionTask(IEnumerable<TEntity> entities)
+            => UpdateRangeAsTransactionTask(entities.ToArray());
+
+        public TransactionTask UpdateRangeAsTransactionTask(params TEntity[] entities)
+            => new TransactionTask(dbContext => 
+            {
+                dbContext.Set<TEntity>().UpdateRange(entities);
+                dbContext.SaveChanges();
+            }, "UpdateRangeAsTransactionTask");
     }
 }

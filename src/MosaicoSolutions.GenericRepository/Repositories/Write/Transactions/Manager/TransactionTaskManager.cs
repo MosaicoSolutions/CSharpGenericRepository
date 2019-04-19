@@ -37,6 +37,7 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions.Man
                     }
                     catch(Exception e)
                     {
+                        transaction.Rollback();
                         var transactionTaskFailure = new TransactionTaskResult(transaction.TransactionId, transactionTask, e);
                         return transactionTaskFailure;
                     }
