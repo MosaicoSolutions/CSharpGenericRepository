@@ -13,7 +13,7 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions.Man
 
         public TransactionTaskManager(Func<DbContext> newDbContext)
         {
-            _newDbContext = newDbContext ?? throw new ArgumentOutOfRangeException(nameof(newDbContext));
+            _newDbContext = newDbContext ?? throw new ArgumentNullException(nameof(newDbContext));
         }
 
         public TransactionTaskResult UseTransaction(TransactionTask transactionTask)

@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace MosaicoSolutions.GenericRepository.Repositories.Read.Queries
 {
-    public class QueryBuilder<TEntity> where TEntity : class
+    public sealed class QueryBuilder<TEntity> where TEntity : class
     {
         private bool tracking;
         private Expression<Func<TEntity, bool>> where;
@@ -13,7 +13,7 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Queries
         private SortDirection? direction;
         private List<Expression<Func<TEntity, object>>> listThenBy = new List<Expression<Func<TEntity, object>>>();
 
-        public QueryBuilder<TEntity> UseTracking(bool useTracking = false)
+        public QueryBuilder<TEntity> UseTracking(bool useTracking = true)
             => ReturnThis(() => tracking = useTracking);
 
         public QueryBuilder<TEntity> Where(Expression<Func<TEntity, bool>> predicate) 

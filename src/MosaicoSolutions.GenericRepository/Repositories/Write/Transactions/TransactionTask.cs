@@ -19,7 +19,7 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions
 
         public Guid TransactionTaskId { get; }
         public DateTime CreatedAt { get; }
-        public string Name { get; set; }
+        public string Name { get; }
         public Action<DbContext> Action { get; }
     }
 }
