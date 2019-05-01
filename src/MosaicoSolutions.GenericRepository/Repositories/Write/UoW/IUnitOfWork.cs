@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MosaicoSolutions.GenericRepository.Repositories.Write.UoW
 {
-    public interface IUnitOfWork<TDbContext> : IDisposable where TDbContext: DbContext
+    public interface IUnitOfWork<TDbContext> where TDbContext: DbContext
     {
         int Commit();
 

@@ -22,6 +22,6 @@ namespace MosaicoSolutions.GenericRepository.Test.WriteRepository
             unitOfWork = new UnitOfWork<BookStoreContext>(bookStoreContext);
         }
 
-        public void Dispose() => unitOfWork.Dispose();
+        public void Dispose() => bookStoreContext.Dispose();
     }
 }
