@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -17,5 +18,20 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Write.UoW
         public int Commit() => dbContext.SaveChanges();
 
         public Task<int> CommitAsync(CancellationToken cancellationToken = default(CancellationToken)) => dbContext.SaveChangesAsync(cancellationToken);
+
+        public void RejectChanges()
+        {
+            foreach (var entry in dbContext.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged))
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.State = EntityState.Detached;
+                        break;
+                    case EntityState.Modified:
+                    case EntityState.Deleted:
+                        entry.Reload();
+                        break;
+                }
+        }
     }
 }

@@ -10,5 +10,7 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Write.UoW
         int Commit();
 
         Task<int> CommitAsync(CancellationToken cancellationToken = default(CancellationToken));
+        
+        void RejectChanges();
     }
 }
