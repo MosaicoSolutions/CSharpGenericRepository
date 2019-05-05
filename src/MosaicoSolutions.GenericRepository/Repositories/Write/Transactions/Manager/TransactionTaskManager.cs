@@ -7,11 +7,11 @@ using MosaicoSolutions.GenericRepository.Repositories.Write.Transactions.Manager
 
 namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions.Manager
 {
-    public class TransactionTaskManager : ITransactionTaskManager
+    public class TransactionTaskManager<TDbContext> : ITransactionTaskManager<TDbContext> where TDbContext : DbContext
     {
-        private readonly Func<DbContext> _newDbContext;
+        private readonly Func<TDbContext> _newDbContext;
 
-        public TransactionTaskManager(Func<DbContext> newDbContext)
+        public TransactionTaskManager(Func<TDbContext> newDbContext)
         {
             _newDbContext = newDbContext ?? throw new ArgumentNullException(nameof(newDbContext));
         }

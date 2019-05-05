@@ -13,7 +13,7 @@ namespace MosaicoSolutions.GenericRepository.Test.WriteRepository.Transactions
 {
     public class TransactionTaskManagerTest
     {
-        private readonly ITransactionTaskManager transactionTaskManager;
+        private readonly ITransactionTaskManager<BookStoreContext> transactionTaskManager;
         private readonly ITransactionalRepository<Author> authorTransactionalRepository;
         private readonly ITransactionalRepository<Book> bookTransactionalRepository;
         private Faker<Author> fakerAuthor;
@@ -21,7 +21,7 @@ namespace MosaicoSolutions.GenericRepository.Test.WriteRepository.Transactions
 
         public TransactionTaskManagerTest()
         {
-            transactionTaskManager = new TransactionTaskManager(BookStoreContext.SqlServerExpress);
+            transactionTaskManager = new TransactionTaskManager<BookStoreContext>(BookStoreContext.SqlServerExpress);
             authorTransactionalRepository = new TransactionalRepository<Author>();
             bookTransactionalRepository = new TransactionalRepository<Book>();
 
