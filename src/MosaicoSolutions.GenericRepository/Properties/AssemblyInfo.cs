@@ -19,6 +19,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("MosaicoSolutions.GenericRepository")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MosaicoSolutions.GenericRepository")]
+[assembly: System.Reflection.AssemblyKeyFileAttribute("MosaicoSolutions.GenericRepositoryKey.snk")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Gerado pela classe WriteCodeFragment do MSBuild.
