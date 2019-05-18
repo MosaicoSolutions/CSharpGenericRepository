@@ -10,11 +10,17 @@ This project provides a generic Repository interface using the CQRS concepts.
 
 ## 1. Read Repository
 
-Use the abstract class ReadRepository<TDbContext, TEntity> where TDbContext is a DbContext, and TEntity is a class, to perform queries and retrieve the data.
+Use the abstract class `ReadRepository<TDbContext, TEntity>` where `TDbContext` is a `DbContext`, and `TEntity` is a class, to perform queries and retrieve the data.
 
 You can inherit it in your own class, or use extension methods.
 
 ``` c#
+var dbContextOptions = new DbContextOptionsBuilder<BookStoreContext>()
+                            .UseInMemoryDatabase(databaseName: "BookStoreContext")
+                            .Options;
+
+var bookStoreContext = new BookStoreContext(dbContextOptions);
+
 ReadRepository<BookStoreContext, Book> bookReadRepository;
 
 bookReadRepository = new DefaultReadRepository<BookStoreContext, Book>(bookStoreContext);
@@ -39,6 +45,33 @@ var queryOptions = new QueryOptions<Author>
         a => a.Books
     }
 };
+
+IQuery query = authorReadRepository.Query(queryOptions);
+
+var firstAuthor = await query.FirstAsync();
+var lastAuthor = await query.LastAsync();
+var filteredAuthors await query.ToListAsync();
+
 ```
 
-The MosaicSolutions.GenericRepository.Repositories.Read namespace only contains interfaces for query operations, that is, they do not change the state of the database.
+> You can use the `QueryBuilder` class to construct the query specification.
+
+``` c#
+var queryOptions = QueryBuilder.For<Author>()
+                               .Where(a => a.Books.Count() == 3)
+                               .Include(a => a.Books)
+                               .OrderBy(a => a.FirstName)
+                               .ThenBy(a => a.LastName)
+                               .Descending()
+                               .Build();
+
+var authors = authorReadRepository.Find(queryOptions);
+```
+
+The `MosaicSolutions.GenericRepository.Repositories.Read` namespace only contains interfaces for query operations, that is, they do not change the state of the database.
+
+## 1. Write Repository
+
+Use the  `WriteRepository<TDbContext, TEntity>` class where `TDbContext` is a `DbContext` and `TEntity` is a class, to perform operations that change the state of the data.
+
+## <> with :heart: and [VSCode](https://code.visualstudio.com)
