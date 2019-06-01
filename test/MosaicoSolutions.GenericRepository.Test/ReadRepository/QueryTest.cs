@@ -148,7 +148,6 @@ namespace MosaicoSolutions.GenericRepository.Test.ReadRepository
                                            .Include(a => a.Books)
                                            .OrderBy(a => a.FirstName)
                                            .ThenBy(a => a.LastName)
-                                           .Descending()
                                            .Build();
 
             var authors = authorReadRepository.Find(queryOptions);

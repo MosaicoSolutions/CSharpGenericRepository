@@ -11,7 +11,7 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Queries
         private List<Expression<Func<TEntity, object>>> includes = new List<Expression<Func<TEntity, object>>>();
         private Expression<Func<TEntity, object>> orderBy;
         private SortDirection? direction;
-        private List<Expression<Func<TEntity, object>>> listThenBy = new List<Expression<Func<TEntity, object>>>();
+        private List<ThenByOptions<TEntity>> listThenBy = new List<ThenByOptions<TEntity>>();
 
         public QueryBuilder<TEntity> UseTracking(bool useTracking = true)
             => ReturnThis(() => tracking = useTracking);
@@ -23,21 +23,32 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Queries
             => ReturnThis(() => includes.Add(include));
 
         public QueryBuilder<TEntity> OrderBy(Expression<Func<TEntity, object>> orderBy)
-            => ReturnThis(() => this.orderBy = orderBy);
+            => ReturnThis(() => 
+            {
+                this.orderBy = orderBy;
+                this.direction = Queries.SortDirection.Ascending;
+            });
+
+        public QueryBuilder<TEntity> OrderByDescending(Expression<Func<TEntity, object>> orderBy)
+            => ReturnThis(() => 
+            {
+                this.orderBy = orderBy;
+                this.direction = Queries.SortDirection.Descending;
+            });
 
         public QueryBuilder<TEntity> ThenBy(Expression<Func<TEntity, object>> thenBy)
-            => ReturnThis(() => listThenBy.Add(thenBy));
+            => ReturnThis(() => listThenBy.Add(new ThenByOptions<TEntity>
+            {
+                Direction = Queries.SortDirection.Ascending,
+                OrderBy = thenBy
+            }));
 
-        public QueryBuilder<TEntity> SortDirection(SortDirection direction)
-            => direction == Queries.SortDirection.Ascending
-                ? Ascending()
-                : Descending();
-
-        public QueryBuilder<TEntity> Ascending()
-            => ReturnThis(() => direction = Queries.SortDirection.Ascending);
-
-        public QueryBuilder<TEntity> Descending()
-            => ReturnThis(() => direction = Queries.SortDirection.Descending);
+        public QueryBuilder<TEntity> ThenByDescending(Expression<Func<TEntity, object>> thenBy)
+            => ReturnThis(() => listThenBy.Add(new ThenByOptions<TEntity>
+            {
+                Direction = Queries.SortDirection.Descending,
+                OrderBy = thenBy
+            }));
 
         public QueryOptions<TEntity> Build()
         {
@@ -50,7 +61,7 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Queries
                 {
                     Direction = direction,
                     OrderBy = orderBy,
-                    ThenBy = listThenBy.ToArray()
+                    ThenByCollection = listThenBy.ToArray()
                 }
             };
 

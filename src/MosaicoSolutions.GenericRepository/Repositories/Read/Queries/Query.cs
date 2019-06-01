@@ -30,9 +30,11 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Queries
                                             ? queryable.OrderBy(sortOptions.OrderBy)
                                             : queryable.OrderByDescending(sortOptions.OrderBy);
 
-                if (sortOptions.ThenBy?.Length > 0)
-                    foreach (var thenBy in sortOptions.ThenBy)
-                        orderedQueryable = orderedQueryable.ThenBy(thenBy);
+                if (sortOptions.ThenByCollection?.Length > 0)
+                    foreach (var thenBy in sortOptions.ThenByCollection)
+                        orderedQueryable = (thenBy.Direction ?? SortDirection.Ascending) == SortDirection.Ascending
+                            ? orderedQueryable.ThenBy(thenBy.OrderBy)
+                            : orderedQueryable.ThenByDescending(thenBy.OrderBy);
 
                 queryable = orderedQueryable;
             }

@@ -3,10 +3,9 @@ using System.Linq.Expressions;
 
 namespace MosaicoSolutions.GenericRepository.Repositories.Read.Queries
 {
-    public struct SortOptions<TEntity> where TEntity : class
+    public struct ThenByOptions<TEntity> where TEntity : class
     {
         public SortDirection? Direction { get; set; }
         public Expression<Func<TEntity, object>> OrderBy { get; set; }
-        public ThenByOptions<TEntity>[] ThenByCollection { get; set; }
     }
 }
