@@ -21,9 +21,7 @@ var dbContextOptions = new DbContextOptionsBuilder<BookStoreContext>()
 
 var bookStoreContext = new BookStoreContext(dbContextOptions);
 
-ReadRepository<BookStoreContext, Book> bookReadRepository;
-
-bookReadRepository = new DefaultReadRepository<BookStoreContext, Book>(bookStoreContext);
+var bookReadRepository = new DefaultReadRepository<BookStoreContext, Book>(bookStoreContext);
 
 var book = bookReadRepository.FindById(1);
 ```
@@ -68,10 +66,73 @@ var queryOptions = QueryBuilder.For<Author>()
 var authors = authorReadRepository.Find(queryOptions);
 ```
 
-The `MosaicSolutions.GenericRepository.Repositories.Read` namespace only contains interfaces for query operations, that is, they do not change the state of the database.
+> The `MosaicSolutions.GenericRepository.Repositories.Read` namespace only contains interfaces for query operations, that is, they do not change the state of the database.
 
-## 1. Write Repository
+## 2. Write Repository
 
-Use the  `WriteRepository<TDbContext, TEntity>` class where `TDbContext` is a `DbContext` and `TEntity` is a class, to perform operations that change the state of the data.
+Use the  `WriteRepository<TDbContext, TEntity>` class, where `TDbContext` is a `DbContext` and `TEntity` is a class, to perform operations that change the state of the data.
+
+You can inherit it in your own class, or use extension methods.
+
+``` c#
+var dbContextOptions = new DbContextOptionsBuilder<BookStoreContext>()
+                            .UseInMemoryDatabase(databaseName: "BookStoreContext")
+                            .Options;
+
+var bookStoreContext = new BookStoreContext(dbContextOptions);
+
+var authorWriteRepository = new DefaultWriteRepository<BookStoreContext, Author>(bookStoreContext);
+var unitOfWork = new UnitOfWork<BookStoreContext>(bookStoreContext);
+
+var newAuthor = new Author
+{
+    FirstName = "William",
+    LastName = "Shakespeare"
+};
+
+authorWriteRepository.Insert(newAuthor);
+var rowsAffected = unitOfWork.Commit();
+```
+
+> All methods of the `WriteRepository<TDbContext, TEntity>` class do not call `SaveChanges()` in their execution. Use the `UnitOfWork` pattern by calling the `Commit()` method to save the changes.
+
+### 2.1 Using Transactions.
+
+If you need to perform a task in a transaction context, the namespace `MosaicoSolutions.GenericRepository.Repositories.Write.Transactions` supports transactions.
+
+``` c#
+var dbContextOptions = new DbContextOptionsBuilder<BookStoreContext>()
+                            .UseInMemoryDatabase(databaseName: "BookStoreContext")
+                            .Options;
+
+var transactionTaskManager = new TransactionTaskManager<BookStoreContext>(() => new new BookStoreContext(dbContextOptions));
+var authorTransactionalRepository = new TransactionalRepository<Author>();
+
+var newAuthor = new Author
+{
+    FirstName = "William",
+    LastName = "Shakespeare"
+};
+
+var insertTask = authorTransactionalRepository.InsertAsTransactionTask(newAuthor);
+
+var transanctionTaskResult = transactionTaskManager.UseTransaction(insertTask);
+
+if (transanctionTaskResult.Success)
+{
+  Console.WriteLine("Author inserted successfully!");
+}
+else
+{
+  Console.WriteLine("Error while trying to insert a new author.");
+  Console.WriteLine($"Erro Message: {transanctionTaskResult.Exception}");
+}
+```
+
+The `TransactionTaskManager<TDbContext>` class is used to perform an operation in transaction context. The `UseTransaction` method returns a `TransactionTaskResult` that tells you whether there was success or failure to perform the operation.
+
+The `InsertAsTransactionTask` method returns a `TransactionTask` that represents a task that will be executed in the transaction context.
+
+You can check the tests [here](test/MosaicoSolutions.GenericRepository.Test/WriteRepository/Transactions/TransactionTaskManagerTest.cs)
 
 ## <> with :heart: and [VSCode](https://code.visualstudio.com)
