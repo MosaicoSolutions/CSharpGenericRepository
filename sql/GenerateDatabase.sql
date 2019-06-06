@@ -1,7 +1,9 @@
 USE [master]
 GO
-/****** Object:  Database [BookStore]    Script Date: 19/04/2019 10:55:26 ******/
+/****** Object:  Database [BookStore]    Script Date: 01/06/2019 23:18:26 ******/
 CREATE DATABASE [BookStore]
+GO
+ALTER DATABASE [BookStore] SET COMPATIBILITY_LEVEL = 140
 GO
 IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
 begin
@@ -70,7 +72,7 @@ ALTER DATABASE [BookStore] SET QUERY_STORE = OFF
 GO
 USE [BookStore]
 GO
-/****** Object:  Table [dbo].[Author]    Script Date: 19/04/2019 10:55:27 ******/
+/****** Object:  Table [dbo].[Author]    Script Date: 01/06/2019 23:18:26 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -79,13 +81,16 @@ CREATE TABLE [dbo].[Author](
 	[AuthorId] [int] IDENTITY(1,1) NOT NULL,
 	[FirstName] [varchar](50) NOT NULL,
 	[LastName] [varchar](50) NOT NULL,
+	[CreatedAt] [datetime2] NOT NULL,
+	[LastUpdatedAt] [datetime2] NULL,
+	[RowVersion] [int] NOT NULL,
  CONSTRAINT [PK_Author] PRIMARY KEY CLUSTERED 
 (
 	[AuthorId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Book]    Script Date: 19/04/2019 10:55:27 ******/
+/****** Object:  Table [dbo].[Book]    Script Date: 01/06/2019 23:18:27 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -94,6 +99,9 @@ CREATE TABLE [dbo].[Book](
 	[BookId] [int] IDENTITY(1,1) NOT NULL,
 	[Title] [varchar](100) NOT NULL,
 	[AuthorId] [int] NOT NULL,
+	[CreatedAt] [datetime2] NOT NULL,
+	[LastUpdatedAt] [datetime2] NULL,
+	[RowVersion] [int] NOT NULL,
  CONSTRAINT [PK_Book] PRIMARY KEY CLUSTERED 
 (
 	[BookId] ASC
@@ -102,21 +110,21 @@ CREATE TABLE [dbo].[Book](
 GO
 SET IDENTITY_INSERT [dbo].[Author] ON 
 
-INSERT [dbo].[Author] ([AuthorId], [FirstName], [LastName]) VALUES (1, N'William', N'Shakespeare')
-INSERT [dbo].[Author] ([AuthorId], [FirstName], [LastName]) VALUES (2, N'Masashi', N'Kishimoto')
-INSERT [dbo].[Author] ([AuthorId], [FirstName], [LastName]) VALUES (3, N'Akira', N'Toriyama')
-INSERT [dbo].[Author] ([AuthorId], [FirstName], [LastName]) VALUES (4, N'Machado', N'Assis')
+INSERT [dbo].[Author] ([AuthorId], [FirstName], [LastName], [CreatedAt], [RowVersion]) VALUES (1, N'William', N'Shakespeare', GETDATE(), 1)
+INSERT [dbo].[Author] ([AuthorId], [FirstName], [LastName], [CreatedAt], [RowVersion]) VALUES (2, N'Masashi', N'Kishimoto', GETDATE(), 1)
+INSERT [dbo].[Author] ([AuthorId], [FirstName], [LastName], [CreatedAt], [RowVersion]) VALUES (3, N'Akira', N'Toriyama', GETDATE(), 1)
+INSERT [dbo].[Author] ([AuthorId], [FirstName], [LastName], [CreatedAt], [RowVersion]) VALUES (4, N'Machado', N'Assis', GETDATE(), 1)
 SET IDENTITY_INSERT [dbo].[Author] OFF
 SET IDENTITY_INSERT [dbo].[Book] ON 
 
-INSERT [dbo].[Book] ([BookId], [Title], [AuthorId]) VALUES (1, N'Hamlet', 1)
-INSERT [dbo].[Book] ([BookId], [Title], [AuthorId]) VALUES (2, N'Othello', 1)
-INSERT [dbo].[Book] ([BookId], [Title], [AuthorId]) VALUES (3, N'MacBeth', 1)
-INSERT [dbo].[Book] ([BookId], [Title], [AuthorId]) VALUES (4, N'Naruto', 2)
-INSERT [dbo].[Book] ([BookId], [Title], [AuthorId]) VALUES (5, N'Dragon Ball', 3)
-INSERT [dbo].[Book] ([BookId], [Title], [AuthorId]) VALUES (6, N'Dom Casmurro', 4)
-INSERT [dbo].[Book] ([BookId], [Title], [AuthorId]) VALUES (7, N'Quincas Borba', 4)
-INSERT [dbo].[Book] ([BookId], [Title], [AuthorId]) VALUES (8, N'A mão e a luva', 4)
+INSERT [dbo].[Book] ([BookId], [Title], [AuthorId], [CreatedAt], [RowVersion]) VALUES (1, N'Hamlet', 1, GETDATE(), 1)
+INSERT [dbo].[Book] ([BookId], [Title], [AuthorId], [CreatedAt], [RowVersion]) VALUES (2, N'Othello', 1, GETDATE(), 1)
+INSERT [dbo].[Book] ([BookId], [Title], [AuthorId], [CreatedAt], [RowVersion]) VALUES (3, N'MacBeth', 1, GETDATE(), 1)
+INSERT [dbo].[Book] ([BookId], [Title], [AuthorId], [CreatedAt], [RowVersion]) VALUES (4, N'Naruto', 2, GETDATE(), 1)
+INSERT [dbo].[Book] ([BookId], [Title], [AuthorId], [CreatedAt], [RowVersion]) VALUES (5, N'Dragon Ball', 3, GETDATE(), 1)
+INSERT [dbo].[Book] ([BookId], [Title], [AuthorId], [CreatedAt], [RowVersion]) VALUES (6, N'Dom Casmurro', 4, GETDATE(), 1)
+INSERT [dbo].[Book] ([BookId], [Title], [AuthorId], [CreatedAt], [RowVersion]) VALUES (7, N'Quincas Borba', 4, GETDATE(), 1)
+INSERT [dbo].[Book] ([BookId], [Title], [AuthorId], [CreatedAt], [RowVersion]) VALUES (8, N'A mão e a luva', 4, GETDATE(), 1)
 SET IDENTITY_INSERT [dbo].[Book] OFF
 ALTER TABLE [dbo].[Book]  WITH CHECK ADD  CONSTRAINT [FK_Book_Author] FOREIGN KEY([AuthorId])
 REFERENCES [dbo].[Author] ([AuthorId])

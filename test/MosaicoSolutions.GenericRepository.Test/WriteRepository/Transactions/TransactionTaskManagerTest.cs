@@ -13,24 +13,18 @@ namespace MosaicoSolutions.GenericRepository.Test.WriteRepository.Transactions
 {
     public class TransactionTaskManagerTest
     {
-        private readonly ITransactionTaskManager<BookStoreContext> transactionTaskManager;
+        private readonly ITransactionTaskManager<WriteBookStoreContext> transactionTaskManager;
         private readonly ITransactionalRepository<Author> authorTransactionalRepository;
-        private readonly ITransactionalRepository<Book> bookTransactionalRepository;
-        private Faker<Author> fakerAuthor;
-        private Faker<Book> fakerBook;
+        private readonly Faker<Author> fakerAuthor;
 
         public TransactionTaskManagerTest()
         {
-            transactionTaskManager = new TransactionTaskManager<BookStoreContext>(BookStoreContext.SqlServerExpress);
+            transactionTaskManager = new TransactionTaskManager<WriteBookStoreContext>(WriteBookStoreContext.SqlServerExpress);
             authorTransactionalRepository = new TransactionalRepository<Author>();
-            bookTransactionalRepository = new TransactionalRepository<Book>();
 
             fakerAuthor = new Faker<Author>()
                             .RuleFor(a => a.FirstName, f => f.Name.FirstName())
                             .RuleFor(a => a.LastName, f => f.Name.LastName());
-
-            fakerBook = new Faker<Book>()
-                        .RuleFor(b => b.Title, f => f.Lorem.Word());
         }
 
         [Fact]
