@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MosaicoSolutions.GenericRepository.Annotations;
 
-namespace MosaicoSolutions.GenericRepository.Contexts
+namespace MosaicoSolutions.GenericRepository.Data.Contexts
 {
     public class WriteDbContext : DbContext
     {
@@ -33,7 +33,7 @@ namespace MosaicoSolutions.GenericRepository.Contexts
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
-        private void BeforeSaveChanges()
+        protected virtual void BeforeSaveChanges()
         {
             CreatedAtAttribute();
             LastUpdatedAtAttribute();

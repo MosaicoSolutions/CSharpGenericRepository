@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MosaicoSolutions.GenericRepository.Contexts;
+using MosaicoSolutions.GenericRepository.Data.Contexts;
 using System.Reflection;
 
 namespace MosaicoSolutions.GenericRepository.Test.Data.Contexts

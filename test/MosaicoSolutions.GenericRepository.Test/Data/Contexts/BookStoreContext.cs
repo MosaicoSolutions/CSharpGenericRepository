@@ -45,8 +45,11 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.Contexts
             return bookStoreContext;
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder) 
-            => modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new AuthorEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new BookEntityConfiguration());
+        }
 
         private void InitializeDataBase()
         {

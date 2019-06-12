@@ -1,10 +1,11 @@
 using MosaicoSolutions.GenericRepository.Annotations;
+using MosaicoSolutions.GenericRepository.Data.Entities;
 using System;
 using System.Collections.Generic;
 
 namespace MosaicoSolutions.GenericRepository.Test.Data.Entities
 {
-    public class Author
+    public class Author : IEntity
     {
         public int AuthorId { get; set; }
         public string FirstName { get; set; }

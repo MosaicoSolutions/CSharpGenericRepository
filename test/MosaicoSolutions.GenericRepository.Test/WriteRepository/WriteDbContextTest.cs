@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Bogus;
 using FluentAssertions;
-using MosaicoSolutions.GenericRepository.Contexts;
+using MosaicoSolutions.GenericRepository.Data.Contexts;
 using MosaicoSolutions.GenericRepository.Test.Data.Contexts;
 using MosaicoSolutions.GenericRepository.Test.Data.Entities;
 using Xunit;
