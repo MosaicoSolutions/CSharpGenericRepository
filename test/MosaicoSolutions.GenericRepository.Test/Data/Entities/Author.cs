@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MosaicoSolutions.GenericRepository.Test.Data.Entities
 {
-    public class Author : IEntity
+    public class Author
     {
         public int AuthorId { get; set; }
         public string FirstName { get; set; }
