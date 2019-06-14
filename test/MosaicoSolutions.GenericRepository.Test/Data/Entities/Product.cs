@@ -1,5 +1,7 @@
 ﻿using System;
 using MosaicoSolutions.GenericRepository.Annotations;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace MosaicoSolutions.GenericRepository.Test.Data.Entities
 {
@@ -8,6 +10,7 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.Entities
         public int ProductId { get; set; }
         public string ProductName { get; set; }
         public decimal Price { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public ProductCategory ProductCategory { get; set; }
         [CreatedAt] public DateTime CreatedAt { get; set; }
         [LastUpdatedAt] public DateTime? LastUpdatedAt { get; set; }

@@ -6,14 +6,14 @@ namespace MosaicoSolutions.GenericRepository.Data.Extensions
 {
     class LogEntityConfigurationDbOptionsExtensions : IDbContextOptionsExtension 
     {
-        internal object logEntityConfiguration;
+        internal object LogEntityConfiguration { get; }
 
         internal LogEntityConfigurationDbOptionsExtensions(object logEntityConfiguration)
         {
-            this.logEntityConfiguration = logEntityConfiguration;
+            this.LogEntityConfiguration = logEntityConfiguration;
         }
 
-        public string LogFragment => $"LogEntityConfigurationType[{logEntityConfiguration.GetType()}]";
+        public string LogFragment => $"LogEntityConfigurationType[{LogEntityConfiguration.GetType()}]";
 
         public bool ApplyServices(IServiceCollection services)
             => true;

@@ -3,17 +3,45 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MosaicoSolutions.GenericRepository.Annotations;
+using MosaicoSolutions.GenericRepository.Data.Entities;
+using MosaicoSolutions.GenericRepository.Data.EntitiesConfiguration;
+using MosaicoSolutions.GenericRepository.Data.Extensions;
+using MosaicoSolutions.GenericRepository.Data.Serialization.Json;
+using Newtonsoft.Json;
 
 namespace MosaicoSolutions.GenericRepository.Data.Contexts
 {
     public class WriteDbContext : DbContext
     {
+        private readonly EntityState[] entityStatesToLog = new EntityState[]
+        {
+            EntityState.Added,
+            EntityState.Deleted,
+            EntityState.Modified
+        };
+
+        public IEntityTypeConfiguration<LogEntity> LogEntityTypeConfiguration { get; }
+        public bool LogEntitiesOnSave { get; }
+
         public WriteDbContext(DbContextOptions options) : base(options)
-        { }
+        {
+            LogEntitiesOnSave = options.FindExtension<LogEntitiesOnSaveChangesDbOptionsExtension>()?.LogEntitiesOnSave ?? false;
+            LogEntityTypeConfiguration = options.FindExtension<LogEntityConfigurationDbOptionsExtensions>()?
+                                                .LogEntityConfiguration as IEntityTypeConfiguration<LogEntity> ?? new LogEntityConfiguration();
+        }
 
         protected WriteDbContext()
         { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            if (LogEntitiesOnSave)
+                modelBuilder.ApplyConfiguration(LogEntityTypeConfiguration);
+
+            base.OnModelCreating(modelBuilder);
+        }
 
         public override int SaveChanges() 
             => this.SaveChanges(acceptAllChangesOnSuccess: true);
@@ -21,7 +49,9 @@ namespace MosaicoSolutions.GenericRepository.Data.Contexts
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             BeforeSaveChanges();
-            return base.SaveChanges(acceptAllChangesOnSuccess);
+            return LogEntitiesOnSave && Database.CurrentTransaction != null 
+                    ? LogEntities(() => base.SaveChanges(acceptAllChangesOnSuccess))
+                    : base.SaveChanges(acceptAllChangesOnSuccess);
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -124,6 +154,69 @@ namespace MosaicoSolutions.GenericRepository.Data.Contexts
                         break;
                 }
             }
+        }
+
+        private int LogEntities(Func<int> saveChangesOriginal)
+        {
+            var entitiesToLog = ChangeTracker.Entries().Where(MustLogEntity).ToList();
+            var entitiesAdded = entitiesToLog.Where(entityEntry => entityEntry.State == EntityState.Added).ToList();
+            var entitiesModified = entitiesToLog.Where(entityEntry => entityEntry.State != EntityState.Added).ToList();
+
+            var entitiesModifiedLog = entitiesModified.AsParallel()
+                                                      .Select(entityEntry => entityEntry.State == EntityState.Modified ? LogModifiedEntity(entityEntry) : LogDeletedEntity(entityEntry))
+                                                      .ToList();
+
+            var rowsAffected = saveChangesOriginal();
+
+            var entitiesAddedLog = entitiesAdded.AsParallel()
+                                                .Select(LogAddedEntity)
+                                                .ToList();
+
+            Set<LogEntity>().AddRange(entitiesModifiedLog);
+            Set<LogEntity>().AddRange(entitiesAddedLog);
+
+            rowsAffected += saveChangesOriginal();
+            return rowsAffected;
+        }
+
+        private LogEntity LogAddedEntity(EntityEntry entityEntry)
+        {
+            var logEntity = new LogEntity
+            {
+                EntityName = entityEntry.Entity.GetType().Name,
+                LogActionType = LogActionType.Insert,
+                OriginalValues = JsonConvert.SerializeObject(entityEntry.Entity, new JsonSerializerSettings
+                {
+                    ContractResolver = new SimpleTypeContractResolver()
+                }),
+                CreatedAt = DateTime.Now,
+                TransactionId = Database.CurrentTransaction.TransactionId.ToString()
+            };
+
+            return logEntity;
+        }
+
+        private LogEntity LogDeletedEntity(EntityEntry entityEntry)
+        {
+            throw new NotImplementedException();
+        }
+
+        private LogEntity LogModifiedEntity(EntityEntry entityEntry)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool MustLogEntity(EntityEntry entityEntry)
+        {
+            if (!entityEntry.Entity.GetType().IsDefined(typeof(EntityLogAttribute), false))
+                return entityStatesToLog.Contains(entityEntry.State);
+
+            var ignoreEntity = entityEntry.Entity.GetType().GetCustomAttributes(false)
+                                                           .OfType<EntityLogAttribute>()
+                                                           .Select(a => a.IgnoreEntity)
+                                                           .FirstOrDefault();
+
+            return !ignoreEntity && entityStatesToLog.Contains(entityEntry.State);
         }
     }
 }

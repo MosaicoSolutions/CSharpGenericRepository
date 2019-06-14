@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MosaicoSolutions.GenericRepository.Data.Contexts;
 using MosaicoSolutions.GenericRepository.Test.Data.EntityConfigurations;
+using MosaicoSolutions.GenericRepository.Data.Extensions;
 
 namespace MosaicoSolutions.GenericRepository.Test.Data.Contexts
 {
-    public class MarketplaceContext : LogWriteDbContext
+    public class MarketplaceContext : WriteDbContext
     {
         public static MarketplaceContext SqlServerExpress()
             => SqlServer(@"Server=.\SQLEXPRESS;Database=MarketplaceContext;Trusted_Connection=True;");
@@ -13,6 +14,7 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.Contexts
         {
             var options = new DbContextOptionsBuilder<MarketplaceContext>()
                 .UseSqlServer(connectionString)
+                .UseLogEntitiesOnSaveChanges()
                 .Options;
 
             var bookStoreContext = new MarketplaceContext(options);

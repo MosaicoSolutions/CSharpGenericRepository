@@ -14,6 +14,5 @@ namespace MosaicoSolutions.GenericRepository.Data.Entities
         public string ChangedValues { get; set; }
         public DateTime CreatedAt { get; set; }
         public string TransactionId { get; set; }
-        public bool TransactionIdWasGenerated { get; set; }
     }
 }

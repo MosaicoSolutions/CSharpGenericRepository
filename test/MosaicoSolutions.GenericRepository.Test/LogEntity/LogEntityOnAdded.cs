@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using FluentAssertions;
+using Xunit;
 
 namespace MosaicoSolutions.GenericRepository.Test.LogEntity
 {
@@ -9,8 +10,11 @@ namespace MosaicoSolutions.GenericRepository.Test.LogEntity
         {
             var newProduct = fakerProduct.Generate();
 
-            marketplaceWriteRepository.Insert(newProduct);
-            unitOfWork.Commit();
+            var insertNewProductTask = marketplaceTransactionRepository.InsertAsTransactionTask(newProduct);
+
+            var transactionTaskResult = transactionTaskManager.UseTransaction(insertNewProductTask);
+
+            transactionTaskResult.Success.Should().BeTrue();
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+﻿using Newtonsoft.Json.Serialization;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -8,20 +8,22 @@ namespace MosaicoSolutions.GenericRepository.Data.Serialization.Json
 {
     public class SimpleTypeContractResolver : DefaultContractResolver
     {
-        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+        protected override List<MemberInfo> GetSerializableMembers(Type objectType)
         {
-            var jsonProperty = base.CreateProperty(member, memberSerialization);
+            var serializableMenbers = base.GetSerializableMembers(objectType);
+            var serializableMenbersFiltered = serializableMenbers.OfType<PropertyInfo>()
+                                                                 .Cast<PropertyInfo>()
+                                                                 .Where(p => IsSimpleType(p.PropertyType))
+                                                                 .Cast<MemberInfo>()
+                                                                 .ToList();
 
-            jsonProperty.ShouldSerialize = instance => IsSimpleType(instance.GetType());
-
-            return jsonProperty;
+            return serializableMenbersFiltered;
         }
 
         private bool IsSimpleType(Type type)
             => type.IsPrimitive ||
                 new[]
                 {
-                    typeof(Enum),
                     typeof(string),
                     typeof(decimal),
                     typeof(DateTime),
@@ -29,6 +31,7 @@ namespace MosaicoSolutions.GenericRepository.Data.Serialization.Json
                     typeof(TimeSpan),
                     typeof(Guid)
                 }.Contains(type) ||
+                type.IsEnum ||
                 Convert.GetTypeCode(type) != TypeCode.Object ||
                 (type.IsGenericType &&
                  type.GetGenericTypeDefinition() == typeof(Nullable<>) &&
