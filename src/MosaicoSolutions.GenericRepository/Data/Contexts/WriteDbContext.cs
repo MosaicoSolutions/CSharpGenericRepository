@@ -8,6 +8,7 @@ using MosaicoSolutions.GenericRepository.Annotations;
 using MosaicoSolutions.GenericRepository.Data.Entities;
 using MosaicoSolutions.GenericRepository.Data.EntitiesConfiguration;
 using MosaicoSolutions.GenericRepository.Data.Extensions;
+using MosaicoSolutions.GenericRepository.Data.Models;
 using MosaicoSolutions.GenericRepository.Data.Serialization.Json;
 using Newtonsoft.Json;
 
@@ -162,8 +163,7 @@ namespace MosaicoSolutions.GenericRepository.Data.Contexts
             var entitiesAdded = entitiesToLog.Where(entityEntry => entityEntry.State == EntityState.Added).ToList();
             var entitiesModified = entitiesToLog.Where(entityEntry => entityEntry.State != EntityState.Added).ToList();
 
-            var entitiesModifiedLog = entitiesModified.AsParallel()
-                                                      .Select(entityEntry => entityEntry.State == EntityState.Modified ? LogModifiedEntity(entityEntry) : LogDeletedEntity(entityEntry))
+            var entitiesModifiedLog = entitiesModified.Select(entityEntry => entityEntry.State == EntityState.Modified ? LogModifiedEntity(entityEntry) : LogDeletedEntity(entityEntry))
                                                       .ToList();
 
             var rowsAffected = saveChangesOriginal();
@@ -184,6 +184,8 @@ namespace MosaicoSolutions.GenericRepository.Data.Contexts
             var logEntity = new LogEntity
             {
                 EntityName = entityEntry.Entity.GetType().Name,
+                EntityFullName = entityEntry.Entity.GetType().FullName,
+                EntityAssembly = entityEntry.Entity.GetType().Assembly.GetName().Name,
                 LogActionType = LogActionType.Insert,
                 OriginalValues = JsonConvert.SerializeObject(entityEntry.Entity, new JsonSerializerSettings
                 {
@@ -201,6 +203,8 @@ namespace MosaicoSolutions.GenericRepository.Data.Contexts
             var logEntity = new LogEntity
             {
                 EntityName = entityEntry.Entity.GetType().Name,
+                EntityFullName = entityEntry.Entity.GetType().FullName,
+                EntityAssembly = entityEntry.Entity.GetType().Assembly.GetName().Name,
                 LogActionType = LogActionType.Delete,
                 OriginalValues = JsonConvert.SerializeObject(entityEntry.Entity, new JsonSerializerSettings
                 {
@@ -215,7 +219,39 @@ namespace MosaicoSolutions.GenericRepository.Data.Contexts
 
         private LogEntity LogModifiedEntity(EntityEntry entityEntry)
         {
-            throw new NotImplementedException();
+            var databaseValues = entityEntry.GetDatabaseValues();
+            var modifiedEntityProperties = entityEntry.OriginalValues
+                                                      .Properties
+                                                      .Where(p =>
+                                                      {
+                                                          var originalValue = (databaseValues[p.Name] ?? string.Empty).ToString();
+                                                          var currentValue = (entityEntry.CurrentValues[p.Name] ?? string.Empty).ToString();
+
+                                                          return entityEntry.Property(p.Name).IsModified && originalValue != currentValue;
+                                                      })
+                                                      .Select(p => new ModifiedEntityProperty
+                                                      {
+                                                          PropertyName = p.Name,
+                                                          OldValue = (databaseValues[p.Name] ?? string.Empty).ToString(),
+                                                          NewValue = (entityEntry.CurrentValues[p.Name] ?? string.Empty).ToString()
+                                                      })
+                                                      .ToList();
+            var logEntity = new LogEntity
+            {
+                EntityName = entityEntry.Entity.GetType().Name,
+                EntityFullName = entityEntry.Entity.GetType().FullName,
+                EntityAssembly = entityEntry.Entity.GetType().Assembly.GetName().Name,
+                LogActionType = LogActionType.Update,
+                OriginalValues = JsonConvert.SerializeObject(entityEntry.GetDatabaseValues().ToObject(), new JsonSerializerSettings
+                {
+                    ContractResolver = new SimpleTypeContractResolver()
+                }),
+                ChangedValues = JsonConvert.SerializeObject(modifiedEntityProperties),
+                CreatedAt = DateTime.Now,
+                TransactionId = Database.CurrentTransaction.TransactionId.ToString()
+            };
+
+            return logEntity;
         }
 
         private bool MustLogEntity(EntityEntry entityEntry)

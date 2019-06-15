@@ -15,6 +15,14 @@ namespace MosaicoSolutions.GenericRepository.Data.EntitiesConfiguration
                    .IsRequired()
                    .HasMaxLength(100);
 
+            builder.Property(x => x.EntityFullName)
+                   .IsRequired()
+                   .HasMaxLength(255);
+
+            builder.Property(x => x.EntityAssembly)
+                   .IsRequired()
+                   .HasMaxLength(100);
+
             builder.Property(x => x.LogActionType)
                    .IsRequired()
                    .HasConversion<string>();
