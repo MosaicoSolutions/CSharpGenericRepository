@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using MosaicoSolutions.GenericRepository.Exceptions;
 
 namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions
