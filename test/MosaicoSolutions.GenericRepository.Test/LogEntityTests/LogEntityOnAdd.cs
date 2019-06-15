@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace MosaicoSolutions.GenericRepository.Test.LogEntityTests
 {
-    public class LogEntityOnAdded : LogEntityUnitTest
+    public class LogEntityOnAdd : LogEntityUnitTest
     {
         [Fact]
         public void AddProduct()
         {
             var newProduct = fakerProduct.Generate();
 
-            var insertNewProductTask = marketplaceTransactionRepository.InsertAsTransactionTask(newProduct);
+            var insertNewProductTask = marketplaceTransactionalRepository.InsertAsTransactionTask(newProduct);
 
             var transactionTaskResult = transactionTaskManager.UseTransaction(insertNewProductTask);
 
@@ -34,7 +34,7 @@ namespace MosaicoSolutions.GenericRepository.Test.LogEntityTests
             var random = new Random();
             var newProducts = fakerProduct.Generate(random.Next(10));
 
-            var insertNewProductTask = marketplaceTransactionRepository.InsertRangeAsTransactionTask(newProducts);
+            var insertNewProductTask = marketplaceTransactionalRepository.InsertRangeAsTransactionTask(newProducts);
 
             var transactionTaskResult = transactionTaskManager.UseTransaction(insertNewProductTask);
 

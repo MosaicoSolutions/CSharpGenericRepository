@@ -198,7 +198,19 @@ namespace MosaicoSolutions.GenericRepository.Data.Contexts
 
         private LogEntity LogDeletedEntity(EntityEntry entityEntry)
         {
-            throw new NotImplementedException();
+            var logEntity = new LogEntity
+            {
+                EntityName = entityEntry.Entity.GetType().Name,
+                LogActionType = LogActionType.Delete,
+                OriginalValues = JsonConvert.SerializeObject(entityEntry.Entity, new JsonSerializerSettings
+                {
+                    ContractResolver = new SimpleTypeContractResolver()
+                }),
+                CreatedAt = DateTime.Now,
+                TransactionId = Database.CurrentTransaction.TransactionId.ToString()
+            };
+
+            return logEntity;
         }
 
         private LogEntity LogModifiedEntity(EntityEntry entityEntry)

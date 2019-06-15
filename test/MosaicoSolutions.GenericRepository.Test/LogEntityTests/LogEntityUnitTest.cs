@@ -13,7 +13,7 @@ namespace MosaicoSolutions.GenericRepository.Test.LogEntityTests
     public class LogEntityUnitTest : IDisposable
     {
         protected MarketplaceContext marketplaceContext;
-        protected ITransactionalRepository<Product> marketplaceTransactionRepository;
+        protected ITransactionalRepository<Product> marketplaceTransactionalRepository;
         protected TransactionTaskManager<MarketplaceContext> transactionTaskManager;
         protected ReadRepository<MarketplaceContext, LogEntity> logEntityReadRepository; 
         protected Faker<Product> fakerProduct;
@@ -21,7 +21,7 @@ namespace MosaicoSolutions.GenericRepository.Test.LogEntityTests
         public LogEntityUnitTest()
         {
             marketplaceContext = MarketplaceContext.SqlServerExpress();
-            marketplaceTransactionRepository = new TransactionalRepository<Product>();
+            marketplaceTransactionalRepository = new TransactionalRepository<Product>();
             transactionTaskManager = new TransactionTaskManager<MarketplaceContext>(MarketplaceContext.SqlServerExpress);
             logEntityReadRepository = new DefaultReadRepository<MarketplaceContext, LogEntity>(marketplaceContext);
             fakerProduct = new Faker<Product>()
