@@ -14,14 +14,12 @@ namespace MosaicoSolutions.GenericRepository.Test.LogEntityTests
         [Fact]
         public void UpdateProduct()
         {
-            var countProduct = marketplaceContext.Set<Product>().Count();
-            var random = new Random();
-            var skipProducts = random.Next(countProduct - 1);
             var productToUpdate = marketplaceContext.Set<Product>()
                                                     .AsNoTracking()
-                                                    .OrderBy(p => p.ProductId)
-                                                    .Skip(skipProducts)
+                                                    .OrderBy(p => Guid.NewGuid())
                                                     .FirstOrDefault();
+
+            var random = new Random();
 
             if (productToUpdate is null)
                 return;
@@ -42,17 +40,14 @@ namespace MosaicoSolutions.GenericRepository.Test.LogEntityTests
         [Fact]
         public void UpdateProducts()
         {
-            var countProduct = marketplaceContext.Set<Product>().Count();
             var random = new Random();
-            var skipProducts = random.Next(countProduct - 1);
-            var maxTake = countProduct - skipProducts == 1 ? 1 : skipProducts;
-            var take = random.Next(maxTake);
+            var countProducts = marketplaceContext.Set<Product>().Count();
+            var take = random.Next(countProducts - 1);
             var productsToUpdate = marketplaceContext.Set<Product>()
-                                                    .AsNoTracking()
-                                                    .OrderBy(p => p.ProductId)
-                                                    .Skip(skipProducts)
-                                                    .Take(take)
-                                                    .ToList();
+                                                     .AsNoTracking()
+                                                     .OrderBy(p => Guid.NewGuid())
+                                                     .Take(take)
+                                                     .ToList();
 
             if (!productsToUpdate.Any())
                 return;
