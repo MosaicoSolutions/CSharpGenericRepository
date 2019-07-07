@@ -1,7 +1,6 @@
 ﻿using MosaicoSolutions.GenericRepository.Data.Entities;
 using Newtonsoft.Json;
 using System;
-using System.Linq;
 using System.Reflection;
 
 namespace MosaicoSolutions.GenericRepository.Data.Models

@@ -8,8 +8,8 @@ using MosaicoSolutions.GenericRepository.Repositories.Read.Queries;
 
 namespace MosaicoSolutions.GenericRepository.Repositories.Read.Interfaces
 {
-    public abstract class ReadRepository<TDbContext, TEntity> where TDbContext: DbContext
-                                                              where TEntity: class
+    public abstract class ReadRepository<TDbContext, TEntity> where TDbContext : DbContext
+                                                              where TEntity : class
     {
         public TDbContext DbContext { get; }
         public DbSet<TEntity> DbSet { get; }
@@ -33,10 +33,10 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Interfaces
             => DbSet.FindAsync(keyValues).ContinueWith(task => task.Result != null);
 
         public virtual TEntity FindById(params object[] keyValues)
-            => DbSet.Find(keyValues);    
-        
+            => DbSet.Find(keyValues);
+
         public virtual Task<TEntity> FindByIdAsync(params object[] keyValues)
-            => DbSet.FindAsync(keyValues); 
+            => DbSet.FindAsync(keyValues);
 
         public virtual Task<TEntity> FindByIdAsync(object[] keyValues, CancellationToken cancellationToken = default(CancellationToken))
             => DbSet.FindAsync(keyValues, cancellationToken);

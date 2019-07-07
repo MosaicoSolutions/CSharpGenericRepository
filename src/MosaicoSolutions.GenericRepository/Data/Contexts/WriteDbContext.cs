@@ -44,13 +44,13 @@ namespace MosaicoSolutions.GenericRepository.Data.Contexts
             base.OnModelCreating(modelBuilder);
         }
 
-        public override int SaveChanges() 
+        public override int SaveChanges()
             => this.SaveChanges(acceptAllChangesOnSuccess: true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             BeforeSaveChanges();
-            return LogEntitiesOnSave && Database.CurrentTransaction != null 
+            return LogEntitiesOnSave && Database.CurrentTransaction != null
                     ? LogEntities(() => base.SaveChanges(acceptAllChangesOnSuccess))
                     : base.SaveChanges(acceptAllChangesOnSuccess);
         }
@@ -83,14 +83,14 @@ namespace MosaicoSolutions.GenericRepository.Data.Contexts
                                            .FirstOrDefault(p => p.IsDefined(typeof(CreatedAtAttribute), true) && p.PropertyType == typeof(DateTime));
 
                 var propertyName = property?.Name;
-                var useUtc = property?.GetCustomAttributes(true)
-                                      .OfType<CreatedAtAttribute>()
-                                      .Select(a => a.UseUtc)
-                                      .FirstOrDefault() ?? false;
 
                 switch (entry.State)
                 {
                     case EntityState.Added:
+                        var useUtc = property?.GetCustomAttributes(true)
+                                              .OfType<CreatedAtAttribute>()
+                                              .Select(a => a.UseUtc)
+                                              .FirstOrDefault() ?? false;
                         entry.Property(propertyName).CurrentValue = useUtc ? DateTime.UtcNow : DateTime.Now;
                         break;
 
@@ -113,10 +113,6 @@ namespace MosaicoSolutions.GenericRepository.Data.Contexts
                                            .FirstOrDefault(p => p.IsDefined(typeof(LastUpdatedAtAttribute), true) && p.PropertyType == typeof(DateTime?));
 
                 var propertyName = property?.Name;
-                var useUtc = property?.GetCustomAttributes(true)
-                                      .OfType<LastUpdatedAtAttribute>()
-                                      .Select(a => a.UseUtc)
-                                      .FirstOrDefault() ?? false;
 
                 switch (entry.State)
                 {
@@ -125,6 +121,10 @@ namespace MosaicoSolutions.GenericRepository.Data.Contexts
                         break;
 
                     case EntityState.Modified:
+                        var useUtc = property?.GetCustomAttributes(true)
+                                              .OfType<LastUpdatedAtAttribute>()
+                                              .Select(a => a.UseUtc)
+                                              .FirstOrDefault() ?? false;
                         entry.Property(propertyName).CurrentValue = useUtc ? DateTime.UtcNow : DateTime.Now;
                         break;
                 }

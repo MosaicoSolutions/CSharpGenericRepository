@@ -8,29 +8,29 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Queries
     {
         private bool tracking;
         private Expression<Func<TEntity, bool>> where;
-        private List<Expression<Func<TEntity, object>>> includes = new List<Expression<Func<TEntity, object>>>();
+        private readonly List<Expression<Func<TEntity, object>>> includes = new List<Expression<Func<TEntity, object>>>();
         private Expression<Func<TEntity, object>> orderBy;
         private SortDirection? direction;
-        private List<ThenByOptions<TEntity>> listThenBy = new List<ThenByOptions<TEntity>>();
+        private readonly List<ThenByOptions<TEntity>> listThenBy = new List<ThenByOptions<TEntity>>();
 
         public QueryBuilder<TEntity> UseTracking(bool useTracking = true)
             => ReturnThis(() => tracking = useTracking);
 
-        public QueryBuilder<TEntity> Where(Expression<Func<TEntity, bool>> predicate) 
+        public QueryBuilder<TEntity> Where(Expression<Func<TEntity, bool>> predicate)
             => ReturnThis(() => where = predicate);
 
         public QueryBuilder<TEntity> Include(Expression<Func<TEntity, object>> include)
             => ReturnThis(() => includes.Add(include));
 
         public QueryBuilder<TEntity> OrderBy(Expression<Func<TEntity, object>> orderBy)
-            => ReturnThis(() => 
+            => ReturnThis(() =>
             {
                 this.orderBy = orderBy;
                 this.direction = Queries.SortDirection.Ascending;
             });
 
         public QueryBuilder<TEntity> OrderByDescending(Expression<Func<TEntity, object>> orderBy)
-            => ReturnThis(() => 
+            => ReturnThis(() =>
             {
                 this.orderBy = orderBy;
                 this.direction = Queries.SortDirection.Descending;

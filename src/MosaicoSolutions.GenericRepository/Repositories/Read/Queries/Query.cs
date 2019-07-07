@@ -8,7 +8,7 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Queries
 {
     internal class Query<TEntity> : IQuery<TEntity> where TEntity : class
     {
-        private IQueryable<TEntity> queryable;
+        private readonly IQueryable<TEntity> queryable;
 
         internal Query(DbSet<TEntity> dbSet, QueryOptions<TEntity> queryOptions)
         {
@@ -19,14 +19,14 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Queries
             queryable = queryOptions.Tracking
                             ? queryable.AsTracking()
                             : queryable.AsNoTracking();
-            
+
             var sortOptions = queryOptions.Sort;
 
             if (sortOptions.OrderBy != null)
             {
                 var sortDirection = sortOptions.Direction ?? SortDirection.Ascending;
 
-                var orderedQueryable =  sortDirection == SortDirection.Ascending
+                var orderedQueryable = sortDirection == SortDirection.Ascending
                                             ? queryable.OrderBy(sortOptions.OrderBy)
                                             : queryable.OrderByDescending(sortOptions.OrderBy);
 
@@ -46,30 +46,30 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Queries
 
         public TEntity First() => queryable.First();
 
-        public Task<TEntity> FirstAsync(CancellationToken cancellationToken = default(CancellationToken)) => queryable.FirstAsync(cancellationToken);
+        public Task<TEntity> FirstAsync(CancellationToken cancellationToken = default) => queryable.FirstAsync(cancellationToken);
 
         public TEntity FirstOrDefault() => queryable.FirstOrDefault();
 
-        public Task<TEntity> FirstOrDefaultAsync(CancellationToken cancellationToken = default(CancellationToken)) => queryable.FirstOrDefaultAsync(cancellationToken);
+        public Task<TEntity> FirstOrDefaultAsync(CancellationToken cancellationToken = default) => queryable.FirstOrDefaultAsync(cancellationToken);
 
         public TEntity Last() => queryable.Last();
 
-        public Task<TEntity> LastAsync(CancellationToken cancellationToken = default(CancellationToken)) => queryable.LastAsync(cancellationToken);
+        public Task<TEntity> LastAsync(CancellationToken cancellationToken = default) => queryable.LastAsync(cancellationToken);
 
         public TEntity LastOrDefault() => queryable.LastOrDefault();
 
-        public Task<TEntity> LastOrDefaultAsync(CancellationToken cancellationToken = default(CancellationToken)) => queryable.LastOrDefaultAsync(cancellationToken);
+        public Task<TEntity> LastOrDefaultAsync(CancellationToken cancellationToken = default) => queryable.LastOrDefaultAsync(cancellationToken);
 
         public TEntity Single() => queryable.Single();
 
-        public Task<TEntity> SingleAsync(CancellationToken cancellationToken = default(CancellationToken)) => queryable.SingleAsync(cancellationToken);
+        public Task<TEntity> SingleAsync(CancellationToken cancellationToken = default) => queryable.SingleAsync(cancellationToken);
 
         public TEntity SingleOrDefault() => queryable.SingleOrDefault();
 
-        public Task<TEntity> SingleOrDefaultAsync(CancellationToken cancellationToken = default(CancellationToken)) => queryable.SingleOrDefaultAsync(cancellationToken);
+        public Task<TEntity> SingleOrDefaultAsync(CancellationToken cancellationToken = default) => queryable.SingleOrDefaultAsync(cancellationToken);
 
         public List<TEntity> ToList() => queryable.ToList();
 
-        public Task<List<TEntity>> ToListAsync(CancellationToken cancellationToken = default(CancellationToken)) => queryable.ToListAsync(cancellationToken);
+        public Task<List<TEntity>> ToListAsync(CancellationToken cancellationToken = default) => queryable.ToListAsync(cancellationToken);
     }
 }

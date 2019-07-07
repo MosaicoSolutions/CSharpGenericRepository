@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MosaicoSolutions.GenericRepository.Data.Entities;
 
 namespace MosaicoSolutions.GenericRepository.Data.EntitiesConfiguration
@@ -21,7 +20,7 @@ namespace MosaicoSolutions.GenericRepository.Data.EntitiesConfiguration
 
             builder.Property(x => x.EntityAssembly)
                    .IsRequired()
-                   .HasMaxLength(100);
+                   .HasMaxLength(255);
 
             builder.Property(x => x.LogActionType)
                    .IsRequired()

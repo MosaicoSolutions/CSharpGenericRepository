@@ -4,13 +4,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MosaicoSolutions.GenericRepository.Exceptions;
 
 namespace MosaicoSolutions.GenericRepository.Repositories.Write.Interfaces
 {
-    public abstract class WriteRepository<TDbContext, TEntity> where TDbContext: DbContext
-                                                               where TEntity: class
+    public abstract class WriteRepository<TDbContext, TEntity> where TDbContext : DbContext
+                                                               where TEntity : class
     {
         public TDbContext DbContext { get; }
         public DbSet<TEntity> DbSet { get; set; }

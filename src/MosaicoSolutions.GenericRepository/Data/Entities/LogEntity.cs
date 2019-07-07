@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using MosaicoSolutions.GenericRepository.Annotations;
 
 namespace MosaicoSolutions.GenericRepository.Data.Entities
 {

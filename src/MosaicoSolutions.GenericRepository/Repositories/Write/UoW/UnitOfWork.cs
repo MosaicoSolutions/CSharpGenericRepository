@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +16,7 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Write.UoW
 
         public int Commit() => dbContext.SaveChanges();
 
-        public Task<int> CommitAsync(CancellationToken cancellationToken = default(CancellationToken)) => dbContext.SaveChangesAsync(cancellationToken);
+        public Task<int> CommitAsync(CancellationToken cancellationToken = default) => dbContext.SaveChangesAsync(cancellationToken);
 
         public void RejectChanges()
         {
