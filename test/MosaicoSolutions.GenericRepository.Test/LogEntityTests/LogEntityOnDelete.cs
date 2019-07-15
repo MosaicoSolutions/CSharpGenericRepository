@@ -15,7 +15,7 @@ namespace MosaicoSolutions.GenericRepository.Test.LogEntityTests
         {
             var firstProduct = marketplaceContext.Set<Product>().FirstOrDefault();
 
-            var deleteTransactionTask = marketplaceTransactionalRepository.RemoveAsTransactionTask(firstProduct);
+            var deleteTransactionTask = productTransactionalRepository.RemoveAsTransactionTask(firstProduct);
 
             var transactionTaskResult = transactionTaskManager.UseTransaction(deleteTransactionTask);
 
@@ -40,7 +40,7 @@ namespace MosaicoSolutions.GenericRepository.Test.LogEntityTests
                                                      .Take(countProducts)
                                                      .ToList();
 
-            var deleteTransactionTask = marketplaceTransactionalRepository.RemoveRangeAsTransactionTask(productsToDelete);
+            var deleteTransactionTask = productTransactionalRepository.RemoveRangeAsTransactionTask(productsToDelete);
 
             var transactionTaskResult = transactionTaskManager.UseTransaction(deleteTransactionTask);
 

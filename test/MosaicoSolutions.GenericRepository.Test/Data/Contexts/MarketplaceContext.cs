@@ -28,6 +28,8 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ProductEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderItemEntityConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

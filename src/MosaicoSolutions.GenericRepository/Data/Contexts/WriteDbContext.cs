@@ -259,12 +259,31 @@ namespace MosaicoSolutions.GenericRepository.Data.Contexts
             if (!entityEntry.Entity.GetType().IsDefined(typeof(EntityLogAttribute), false))
                 return entityStatesToLog.Contains(entityEntry.State);
 
-            var ignoreEntity = entityEntry.Entity.GetType().GetCustomAttributes(false)
-                                                           .OfType<EntityLogAttribute>()
-                                                           .Select(a => a.IgnoreEntity)
-                                                           .FirstOrDefault();
+            var entityLogAttribute = entityEntry.Entity.GetType().GetCustomAttributes(false)
+                                                                 .OfType<EntityLogAttribute>()
+                                                                 .FirstOrDefault();
 
-            return !ignoreEntity && entityStatesToLog.Contains(entityEntry.State);
+            if (entityLogAttribute.IgnoreEntity)
+                return false;
+
+            var logActionType = EntityStateToLogActionType(entityEntry.State);
+
+            return logActionType.HasValue && entityLogAttribute.LogActionType.HasFlag(logActionType.Value);
+        }
+
+        private LogActionType? EntityStateToLogActionType(EntityState entityState)
+        {
+            switch (entityState)
+            {
+                case EntityState.Deleted:
+                    return LogActionType.Delete;
+                case EntityState.Modified:
+                    return LogActionType.Update;
+                case EntityState.Added:
+                    return LogActionType.Insert;
+                default:
+                    return null;
+            }
         }
     }
 }

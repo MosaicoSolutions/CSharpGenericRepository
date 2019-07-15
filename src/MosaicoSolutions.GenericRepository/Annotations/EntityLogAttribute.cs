@@ -1,4 +1,5 @@
 using System;
+using MosaicoSolutions.GenericRepository.Data.Entities;
 
 namespace MosaicoSolutions.GenericRepository.Annotations
 {
@@ -6,7 +7,6 @@ namespace MosaicoSolutions.GenericRepository.Annotations
     public sealed class EntityLogAttribute : Attribute
     {
         public bool IgnoreEntity { get; set; }
-
-        public EntityLogAttribute(bool ignoreEntity = false) => IgnoreEntity = ignoreEntity;
+        public LogActionType LogActionType { get; set; } = LogActionType.Insert | LogActionType.Update | LogActionType.Delete;
     }
 }

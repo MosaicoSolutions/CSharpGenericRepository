@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using MosaicoSolutions.GenericRepository.Annotations;
+using MosaicoSolutions.GenericRepository.Data.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace MosaicoSolutions.GenericRepository.Test.Data.Entities
 {
+    [EntityLog(LogActionType = LogActionType.Update | LogActionType.Delete)]
     public class Product
     {
         public int ProductId { get; set; }
