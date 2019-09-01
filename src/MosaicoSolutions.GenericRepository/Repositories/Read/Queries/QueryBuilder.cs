@@ -40,14 +40,14 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Queries
             => ReturnThis(() => listThenBy.Add(new ThenByOptions<TEntity>
             {
                 Direction = Queries.SortDirection.Ascending,
-                OrderBy = thenBy
+                ThenBy = thenBy
             }));
 
         public QueryBuilder<TEntity> ThenByDescending(Expression<Func<TEntity, object>> thenBy)
             => ReturnThis(() => listThenBy.Add(new ThenByOptions<TEntity>
             {
                 Direction = Queries.SortDirection.Descending,
-                OrderBy = thenBy
+                ThenBy = thenBy
             }));
 
         public QueryOptions<TEntity> Build()
