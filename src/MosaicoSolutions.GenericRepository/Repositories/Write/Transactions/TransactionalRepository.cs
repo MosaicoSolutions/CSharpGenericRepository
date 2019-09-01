@@ -11,7 +11,7 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions
             {
                 dbContext.Set<TEntity>().Add(entity);
                 dbContext.SaveChanges();
-            }, "InsertAsTransactionTask");
+            }, nameof(InsertAsTransactionTask));
 
         public TransactionTask InsertRangeAsTransactionTask(IEnumerable<TEntity> entities)
             => InsertRangeAsTransactionTask(entities.ToArray());
@@ -21,14 +21,14 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions
             {
                 dbContext.Set<TEntity>().AddRange(entities);
                 dbContext.SaveChanges();
-            }, "InsertRangeAsTransactionTask");
+            }, nameof(InsertRangeAsTransactionTask));
 
         public TransactionTask RemoveAsTransactionTask(TEntity entity)
             => new TransactionTask(dbContext => 
             {
                 dbContext.Set<TEntity>().Remove(entity);
                 dbContext.SaveChanges();
-            }, "RemoveAsTransactionTask");
+            }, nameof(RemoveAsTransactionTask));
 
         public TransactionTask RemoveByIdAsTransactionTask(params object[] keyValues)
             => new TransactionTask(dbContext => 
@@ -40,7 +40,7 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions
 
                 dbContext.Set<TEntity>().Remove(entity);
                 dbContext.SaveChanges();
-            }, "RemoveByIdAsTransactionTask");
+            }, nameof(RemoveByIdAsTransactionTask));
 
         public TransactionTask RemoveRangeAsTransactionTask(IEnumerable<TEntity> entities)
             => RemoveRangeAsTransactionTask(entities.ToArray());
@@ -50,14 +50,14 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions
             {
                 dbContext.Set<TEntity>().RemoveRange(entities);
                 dbContext.SaveChanges();
-            }, "RemoveRangeAsTransactionTask");
+            }, nameof(RemoveRangeAsTransactionTask));
 
         public TransactionTask UpdateAsTransactionTask(TEntity entity)
             => new TransactionTask(dbContext => 
             {
                 dbContext.Set<TEntity>().Update(entity);
                 dbContext.SaveChanges();
-            }, "UpdateAsTransactionTask");
+            }, nameof(UpdateAsTransactionTask));
 
         public TransactionTask UpdateRangeAsTransactionTask(IEnumerable<TEntity> entities)
             => UpdateRangeAsTransactionTask(entities.ToArray());
@@ -67,6 +67,6 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Write.Transactions
             {
                 dbContext.Set<TEntity>().UpdateRange(entities);
                 dbContext.SaveChanges();
-            }, "UpdateRangeAsTransactionTask");
+            }, nameof(UpdateRangeAsTransactionTask));
     }
 }
