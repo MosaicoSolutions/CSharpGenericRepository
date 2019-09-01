@@ -12,9 +12,11 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Queries
 
         internal Query(DbSet<TEntity> dbSet, QueryOptions<TEntity> queryOptions)
         {
-            queryable = queryOptions.Where is null
-                            ? dbSet
-                            : dbSet.Where(queryOptions.Where);
+            queryable = queryOptions.WhereUsingQueryable is null
+                            ? queryOptions.Where is null
+                                ? dbSet
+                                : dbSet.Where(queryOptions.Where)
+                            : queryOptions.WhereUsingQueryable(dbSet);
 
             queryable = queryOptions.Tracking
                             ? queryable.AsTracking()
@@ -33,8 +35,8 @@ namespace MosaicoSolutions.GenericRepository.Repositories.Read.Queries
                 if (sortOptions.ThenByCollection?.Length > 0)
                     foreach (var thenBy in sortOptions.ThenByCollection)
                         orderedQueryable = (thenBy.Direction ?? SortDirection.Ascending) == SortDirection.Ascending
-                            ? orderedQueryable.ThenBy(thenBy.OrderBy)
-                            : orderedQueryable.ThenByDescending(thenBy.OrderBy);
+                            ? orderedQueryable.ThenBy(thenBy.ThenBy)
+                            : orderedQueryable.ThenByDescending(thenBy.ThenBy);
 
                 queryable = orderedQueryable;
             }
