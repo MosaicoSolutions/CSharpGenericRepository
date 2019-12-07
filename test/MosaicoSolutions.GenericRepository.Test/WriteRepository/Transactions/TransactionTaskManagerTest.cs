@@ -19,7 +19,7 @@ namespace MosaicoSolutions.GenericRepository.Test.WriteRepository.Transactions
 
         public TransactionTaskManagerTest()
         {
-            transactionTaskManager = new TransactionTaskManager<WriteBookStoreContext>(WriteBookStoreContext.SqlServerExpress);
+            transactionTaskManager = new TransactionTaskManager<WriteBookStoreContext>(WriteBookStoreContext.SqlServerDocker);
             authorTransactionalRepository = new TransactionalRepository<Author>();
 
             fakerAuthor = new Faker<Author>()

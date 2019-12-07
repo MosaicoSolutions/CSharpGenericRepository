@@ -11,47 +11,50 @@ namespace MosaicoSolutions.GenericRepository.Test.LogEntityTests
     public class LogEntityOnDelete : LogEntityUnitTest
     {
         [Fact]
-        public void DeleteProduct()
+        public void DeleteOrdemItem()
         {
-            var firstProduct = marketplaceContext.Set<Product>().FirstOrDefault();
+            var firstOrderItem = marketplaceContext.Set<OrderItem>()
+                                                   .FirstOrDefault();
 
-            var deleteTransactionTask = productTransactionalRepository.RemoveAsTransactionTask(firstProduct);
+            if (firstOrderItem is null) return;
+
+            var deleteTransactionTask = orderItemTransactionalRepository.RemoveAsTransactionTask(firstOrderItem);
 
             var transactionTaskResult = transactionTaskManager.UseTransaction(deleteTransactionTask);
 
             transactionTaskResult.Success.Should().BeTrue();
 
-            var productIdExpressison = $"\"{nameof(firstProduct.ProductId)}\":{firstProduct.ProductId}";
+            var orderItemIdExpressison = $"\"{nameof(firstOrderItem.OrdemItemId)}\":{firstOrderItem.OrdemItemId}";
             var transactionId = transactionTaskResult.TransactionId.ToString();
 
-            logEntityReadRepository.AnyAsync(log => log.OriginalValues.Contains(productIdExpressison) &&
+            logEntityReadRepository.AnyAsync(log => log.OriginalValues.Contains(orderItemIdExpressison) &&
                                                     log.LogActionType == LogActionType.Delete &&
                                                     log.TransactionId == transactionId).Result.Should().BeTrue();
 
-            marketplaceContext.Set<Product>().Any(p => p.ProductId == firstProduct.ProductId).Should().BeFalse();
+            marketplaceContext.Set<OrderItem>().Any(o => o.OrdemItemId == firstOrderItem.OrdemItemId).Should().BeFalse();
         }
 
         [Fact]
-        public void DeleteProducts()
+        public void DeleteOrdemItems()
         {
             var random = new Random();
-            var countProducts = random.Next(5);
-            var productsToDelete = marketplaceContext.Set<Product>()
-                                                     .Take(countProducts)
-                                                     .ToList();
+            var countOrderItems = random.Next(5);
+            var orderItemsToDelete = marketplaceContext.Set<OrderItem>()
+                                                       .Take(countOrderItems)
+                                                       .ToList();
 
-            var deleteTransactionTask = productTransactionalRepository.RemoveRangeAsTransactionTask(productsToDelete);
+            var deleteTransactionTask = orderItemTransactionalRepository.RemoveRangeAsTransactionTask(orderItemsToDelete);
 
             var transactionTaskResult = transactionTaskManager.UseTransaction(deleteTransactionTask);
 
             transactionTaskResult.Success.Should().BeTrue();
             var transactionId = transactionTaskResult.TransactionId.ToString();
 
-            productsToDelete.ForEach(p =>
+            orderItemsToDelete.ForEach(p =>
             {
-                var productIdExpressison = $"\"{nameof(p.ProductId)}\":{p.ProductId}";
+                var orderItemIdExpressison = $"\"{nameof(p.OrdemItemId)}\":{p.OrdemItemId}";
 
-                logEntityReadRepository.AnyAsync(log => log.OriginalValues.Contains(productIdExpressison) && 
+                logEntityReadRepository.AnyAsync(log => log.OriginalValues.Contains(orderItemIdExpressison) && 
                                                         log.LogActionType == LogActionType.Delete &&
                                                         log.TransactionId == transactionId).Result.Should().BeTrue();
             });

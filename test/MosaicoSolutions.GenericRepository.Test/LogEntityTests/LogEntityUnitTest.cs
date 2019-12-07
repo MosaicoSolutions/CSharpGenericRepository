@@ -17,6 +17,7 @@ namespace MosaicoSolutions.GenericRepository.Test.LogEntityTests
         protected MarketplaceContext marketplaceContext;
         protected ITransactionalRepository<Product> productTransactionalRepository;
         protected ITransactionalRepository<Order> orderTransactionalRepository;
+        protected ITransactionalRepository<OrderItem> orderItemTransactionalRepository;
         protected TransactionTaskManager<MarketplaceContext> transactionTaskManager;
         protected ReadRepository<MarketplaceContext, LogEntity> logEntityReadRepository; 
         protected Faker<Product> fakerProduct;
@@ -25,10 +26,11 @@ namespace MosaicoSolutions.GenericRepository.Test.LogEntityTests
 
         public LogEntityUnitTest()
         {
-            marketplaceContext = MarketplaceContext.SqlServerExpress();
+            marketplaceContext = MarketplaceContext.SqlServerDocker();
             productTransactionalRepository = new TransactionalRepository<Product>();
             orderTransactionalRepository = new TransactionalRepository<Order>();
-            transactionTaskManager = new TransactionTaskManager<MarketplaceContext>(MarketplaceContext.SqlServerExpress);
+            orderItemTransactionalRepository = new TransactionalRepository<OrderItem>();
+            transactionTaskManager = new TransactionTaskManager<MarketplaceContext>(MarketplaceContext.SqlServerDocker);
             logEntityReadRepository = new DefaultReadRepository<MarketplaceContext, LogEntity>(marketplaceContext);
 
             var products = marketplaceContext.Set<Product>().AsNoTracking().ToList();

@@ -18,7 +18,7 @@ namespace MosaicoSolutions.GenericRepository.Test.LogEntityTests
 
         public LogEntityModelTests()
         {
-            marketplaceContext = MarketplaceContext.SqlServerExpress();
+            marketplaceContext = MarketplaceContext.SqlServerDocker();
             logEntityReadRepository = new DefaultReadRepository<MarketplaceContext, LogEntity>(marketplaceContext);
         }
 

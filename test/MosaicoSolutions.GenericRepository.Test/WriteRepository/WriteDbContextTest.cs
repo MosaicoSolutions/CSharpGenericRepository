@@ -16,7 +16,7 @@ namespace MosaicoSolutions.GenericRepository.Test.WriteRepository
 
         public WriteDbContextTest()
         {
-            writeDbContext = WriteBookStoreContext.SqlServerExpress();
+            writeDbContext = WriteBookStoreContext.SqlServerDocker();
             fakerAuthor = new Faker<Author>()
                                 .RuleFor(a => a.FirstName, f => f.Name.FirstName())
                                 .RuleFor(a => a.LastName, f => f.Name.LastName());

@@ -9,6 +9,9 @@ namespace MosaicoSolutions.GenericRepository.Test.Data.Contexts
     {
         public static MarketplaceContext SqlServerExpress()
             => SqlServer(@"Server=.\SQLEXPRESS;Database=MarketplaceContext;Trusted_Connection=True;");
+        
+        public static MarketplaceContext SqlServerDocker()
+            => SqlServer(@"Server=localhost,1433\Calalog=MarketplaceContext;Database=MarketplaceContext;User=sa;Password=yourStrong(!)Password;");
 
         public static MarketplaceContext SqlServer(string connectionString)
         {

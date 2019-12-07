@@ -2,28 +2,33 @@
 using Xunit;
 using MosaicoSolutions.GenericRepository.Repositories.Read.Extensions;
 using MosaicoSolutions.GenericRepository.Data.Entities;
+using System;
 
 namespace MosaicoSolutions.GenericRepository.Test.LogEntityTests
 {
     public class LogEntityOnAdd : LogEntityUnitTest
     {
         [Fact]
-        public void ShouldNotLogWhenAddindProduct()
+        public void ShouldNotLogWhenAddindProducts()
         {
-            var newProduct = fakerProduct.Generate();
+            var random = new Random();
+            var newProducts = fakerProduct.Generate(random.Next(1, 3));
 
-            var insertNewProductTask = productTransactionalRepository.InsertAsTransactionTask(newProduct);
+            var insertNewProductTask = productTransactionalRepository.InsertRangeAsTransactionTask(newProducts);
 
             var transactionTaskResult = transactionTaskManager.UseTransaction(insertNewProductTask);
-
             transactionTaskResult.Success.Should().BeTrue();
 
-            var productIdExpressison = $"\"{nameof(newProduct.ProductId)}\":{newProduct.ProductId}";
             var transactionId = transactionTaskResult.TransactionId.ToString();
 
-            logEntityReadRepository.AnyAsync(log => log.OriginalValues.Contains(productIdExpressison) &&
-                                                    log.LogActionType == LogActionType.Insert &&
-                                                    log.TransactionId == transactionId).Result.Should().BeFalse();
+            newProducts.ForEach(p =>
+            {
+                var productIdExpressison = $"\"{nameof(p.ProductId)}\":{p.ProductId}";
+
+                logEntityReadRepository.AnyAsync(log => log.OriginalValues.Contains(productIdExpressison) && 
+                                                        log.LogActionType == LogActionType.Insert &&
+                                                        log.TransactionId == transactionId).Result.Should().BeFalse();
+            });
         }
 
         [Fact]
