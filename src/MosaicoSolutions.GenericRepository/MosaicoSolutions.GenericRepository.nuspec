@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>MosaicoSolutions.GenericRepository</id>
+    <version>2.0.0</version>
+    <title>MosaicoSolutions.GenericRepository</title>
+    <authors>bruno.moura</authors>
+    <owners>bruno.moura</owners>
+    <licenseUrl>https://github.com/MosaicoSolutions/CSharpGenericRepository/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/MosaicoSolutions/CSharpGenericRepository</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A generic repository pattern implementation using cqrs concepts.</description>
+    <copyright>Copyright 2019</copyright>
+    <tags>Cqrs GenericRepository CSharpRepository GenericRepositoryPattern</tags>
+  </metadata>
+</package>
